@@ -56,8 +56,8 @@ program.on('--help', function(){
   console.log();
   console.log('  Examples:');
   console.log();
-  console.log('    $ vue --help');
-  console.log('    $ vue -h');
+  console.log('    $ vue-make --help');
+  console.log('    $ vue-make -h');
 });
 
 program.parse(process.argv);
