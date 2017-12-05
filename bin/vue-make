@@ -1,0 +1,52 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var chalk = require('chalk');
+
+program
+  .version('0.0.1');
+
+program
+  .command('make:mixin [name]')
+  .description(chalk.gray('    # create mixin file'))
+  .action(function (name, options) {
+    console.log(name)
+  });
+
+program
+  .command('make:store [moduleName]')
+  .description(chalk.gray('    # create module file for store'))
+  .action(function (moduleName, options) {
+    console.log(moduleName)
+  });
+
+program
+  .command('make:directive [name]')
+  .description(chalk.gray('    # create directive file'))
+  .action(function (name, options) {
+    console.log(name)
+  });
+
+program
+  .command('make:view [path]')
+  .description(chalk.gray('    # create view file'))
+  .action(function (path, options) {
+    console.log(path)
+  });
+
+program
+  .command('make:component [name]')
+  .description(chalk.gray('    # create component file'))
+  .action(function (name, options) {
+    console.log(name)
+  });
+
+program.on('--help', function(){
+  console.log();
+  console.log('  Examples:');
+  console.log();
+  console.log('    $ vue --help');
+  console.log('    $ vue -h');
+});
+
+program.parse(process.argv);
