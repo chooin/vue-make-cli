@@ -2,6 +2,7 @@
 
 var program = require('commander');
 var chalk = require('chalk');
+var shell = require('shelljs');
 
 program
   .version('0.0.1');
@@ -31,7 +32,7 @@ program
   .command('make:view [path]')
   .description(chalk.gray('    # create view file'))
   .action(function (path, options) {
-    console.log(path)
+    shell.cp('./bin/vue-make', './bin/v')
   });
 
 program
@@ -39,6 +40,12 @@ program
   .description(chalk.gray('    # create component file'))
   .action(function (name, options) {
     console.log(name)
+  });
+
+program
+  .command('*')
+  .action(function (name, options) {
+    console.log(name, options)
   });
 
 program.on('--help', function(){

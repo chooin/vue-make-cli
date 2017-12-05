@@ -2,10 +2,6 @@
   "name": "vue-extras-cli",
   "version": "1.0.0",
   "description": "vue-extras-cli",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Chooin/vue-extras-cli.git"
@@ -15,10 +11,19 @@
   "bugs": {
     "url": "https://github.com/Chooin/vue-extras-cli/issues"
   },
+  "bin": {
+    "vue-make": "bin/vue-make"
+  },
   "homepage": "https://github.com/Chooin/vue-extras-cli#readme",
   "dependencies": {
     "chalk": "^2.3.0",
     "commander": "^2.12.2",
-    "inquirer": "^4.0.1"
+    "inquirer": "^4.0.1",
+    "shelljs": "^0.7.8"
+  },
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
