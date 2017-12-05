@@ -1,13 +1,9 @@
-# vue-extras-cli
+# vue-make-cli
 
 ``` sh
-vue make:mixin
-
-vue make:store
-
-vue make:directive
-
-vue make:view
-
-vue make:component
+vue-make mixin [name]            # create mixin file
+vue-make store [moduleName]      # create module file for store
+vue-make directive [name]        # create directive file
+vue-make view [path]             # create view file
+vue-make component [name]        # create component file
 ```

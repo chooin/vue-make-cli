@@ -1,20 +1,20 @@
 {
-  "name": "vue-extras-cli",
-  "version": "1.0.0",
-  "description": "vue-extras-cli",
+  "name": "vue-make-cli",
+  "version": "1.0.1",
+  "description": "vue-make-cli",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Chooin/vue-extras-cli.git"
+    "url": "git+https://github.com/Chooin/vue-make-cli.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Chooin/vue-extras-cli/issues"
+    "url": "https://github.com/Chooin/vue-make-cli/issues"
   },
   "bin": {
     "vue-make": "bin/vue-make"
   },
-  "homepage": "https://github.com/Chooin/vue-extras-cli#readme",
+  "homepage": "https://github.com/Chooin/vue-make-cli#readme",
   "dependencies": {
     "chalk": "^2.3.0",
     "commander": "^2.12.2",
@@ -25,5 +25,6 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  }
+  },
+  "preferGlobal": true
 }

@@ -8,45 +8,49 @@ program
   .version('0.0.1');
 
 program
-  .command('make:mixin [name]')
+  .command('vue-make mixin [name]')
   .description(chalk.gray('    # create mixin file'))
   .action(function (name, options) {
     console.log(name)
   });
 
 program
-  .command('make:store [moduleName]')
+  .command('vue-make store [moduleName]')
   .description(chalk.gray('    # create module file for store'))
   .action(function (moduleName, options) {
     console.log(moduleName)
   });
 
 program
-  .command('make:directive [name]')
+  .command('vue-make directive [name]')
   .description(chalk.gray('    # create directive file'))
   .action(function (name, options) {
     console.log(name)
   });
 
 program
-  .command('make:view [path]')
+  .command('vue-make view [path]')
   .description(chalk.gray('    # create view file'))
   .action(function (path, options) {
     shell.cp('./bin/vue-make', './bin/v')
   });
 
 program
-  .command('make:component [name]')
+  .command('vue-make component [name]')
   .description(chalk.gray('    # create component file'))
   .action(function (name, options) {
-    console.log(name)
+    shell.cp(
+      '-r',
+      '../template/component/[componentName]',
+      `./${name}`
+    )
   });
 
-program
-  .command('*')
-  .action(function (name, options) {
-    console.log(name, options)
-  });
+// program
+//   .command('*')
+//   .action(function (name, options) {
+//     console.log(name, options)
+//   });
 
 program.on('--help', function(){
   console.log();
