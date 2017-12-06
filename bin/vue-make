@@ -3,47 +3,56 @@
 var program = require('commander');
 var chalk = require('chalk');
 var shell = require('shelljs');
+var fs = require('fs');
+var fse = require('fs-extra');
 
 program
   .version('0.0.1');
 
 program
-  .command('vue-make mixin [name]')
+  .command('mixin [name]')
   .description(chalk.gray('    # create mixin file'))
   .action(function (name, options) {
     console.log(name)
   });
 
 program
-  .command('vue-make store [moduleName]')
+  .command('store [moduleName]')
   .description(chalk.gray('    # create module file for store'))
   .action(function (moduleName, options) {
     console.log(moduleName)
   });
 
 program
-  .command('vue-make directive [name]')
+  .command('directive [name]')
   .description(chalk.gray('    # create directive file'))
   .action(function (name, options) {
     console.log(name)
   });
 
 program
-  .command('vue-make view [path]')
+  .command('view [path]')
   .description(chalk.gray('    # create view file'))
   .action(function (path, options) {
     shell.cp('./bin/vue-make', './bin/v')
   });
 
 program
-  .command('vue-make component [name]')
+  .command('component [name]')
   .description(chalk.gray('    # create component file'))
   .action(function (name, options) {
-    shell.cp(
-      '-r',
-      '../template/component/[componentName]',
-      `./${name}`
-    )
+    fse.copy(`${__dirname}/../templates/component/[componentName]`, `./src/components/${name}`).then(() => {
+      fs.readFile(`./src/components/${name}/index.vue`, 'utf8', function (err, data) {
+        fs.writeFile(`./src/components/${name}/index.vue`, data.split('[componentName]').join(name), 'utf8', function (err) {
+           if (err) return console.log(err);
+        });
+      });
+      fs.readFile(`./src/components/${name}/style.scss`, 'utf8', function (err, data) {
+        fs.writeFile(`./src/components/${name}/style.scss`, data.split('[componentName]').join(name), 'utf8', function (err) {
+           if (err) return console.log(err);
+        });
+      });
+    })
   });
 
 // program
