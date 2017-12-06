@@ -1,19 +1,15 @@
 <template>
-  <div class="[componentName]">
+  <div class="[view]">
 
   </div>
 </template>
 
 <script>
 export default {
-  name: '[componentName]',
   data () {
     return {
 
     }
-  },
-  props: {
-
   },
   created () {
 

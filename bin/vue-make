@@ -2,7 +2,6 @@
 
 var program = require('commander');
 var chalk = require('chalk');
-var shell = require('shelljs');
 var fs = require('fs');
 var fse = require('fs-extra');
 
@@ -13,7 +12,17 @@ program
   .command('mixin [name]')
   .description(chalk.gray('    # create mixin file'))
   .action(function (name, options) {
-    console.log(name)
+    var putDir = `./src/mixins/${name}.js`
+    fse.copy(`${__dirname}/../templates/[mixin].js`, putDir).then(() => {
+      fs.readFile(putDir, 'utf8', function (err, data) {
+        fs.writeFile(putDir, data.split('[mixin]').join(name), 'utf8', function (err) {
+           if (err) return console.log(err);
+        });
+      });
+      console.log();
+      console.log(chalk.yellow(`Create mixin success`));
+      console.log();
+    });
   });
 
 program
@@ -34,24 +43,27 @@ program
   .command('view [path]')
   .description(chalk.gray('    # create view file'))
   .action(function (path, options) {
-    shell.cp('./bin/vue-make', './bin/v')
   });
 
 program
   .command('component [name]')
   .description(chalk.gray('    # create component file'))
   .action(function (name, options) {
-    fse.copy(`${__dirname}/../templates/component/[componentName]`, `./src/components/${name}`).then(() => {
-      fs.readFile(`./src/components/${name}/index.vue`, 'utf8', function (err, data) {
-        fs.writeFile(`./src/components/${name}/index.vue`, data.split('[componentName]').join(name), 'utf8', function (err) {
+    var putDir = `./src/components/${name}`
+    fse.copy(`${__dirname}/../templates/[component]`, putDir).then(() => {
+      fs.readFile(`${putDir}/index.vue`, 'utf8', function (err, data) {
+        fs.writeFile(`${putDir}/index.vue`, data.split('[component]').join(name), 'utf8', function (err) {
            if (err) return console.log(err);
         });
       });
-      fs.readFile(`./src/components/${name}/style.scss`, 'utf8', function (err, data) {
-        fs.writeFile(`./src/components/${name}/style.scss`, data.split('[componentName]').join(name), 'utf8', function (err) {
+      fs.readFile(`${putDir}/style.scss`, 'utf8', function (err, data) {
+        fs.writeFile(`${putDir}/style.scss`, data.split('[component]').join(name), 'utf8', function (err) {
            if (err) return console.log(err);
         });
       });
+      console.log();
+      console.log(chalk.yellow(`Create component success`));
+      console.log();
     })
   });
 
