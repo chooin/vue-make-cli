@@ -68,24 +68,24 @@ program
     }
   })
 
-  function createComponent(name) {
-    var putDir = `./src/components/${name}`
-    fse.copy(`${__dirname}/../templates/[component]`, putDir).then(() => {
-      fs.readFile(`${putDir}/index.vue`, 'utf8', function (err, data) {
-        fs.writeFile(`${putDir}/index.vue`, data.split('[component]').join(name), 'utf8', function (err) {
-            if (err) return console.log(err)
-        })
+function createComponent (name) {
+  var putDir = `./src/components/${name}`
+  fse.copy(`${__dirname}/../templates/[component]`, putDir).then(() => {
+    fs.readFile(`${putDir}/index.vue`, 'utf8', function (err, data) {
+      fs.writeFile(`${putDir}/index.vue`, data.split('[component]').join(name), 'utf8', function (err) {
+          if (err) return console.log(err)
       })
-      fs.readFile(`${putDir}/style.scss`, 'utf8', function (err, data) {
-        fs.writeFile(`${putDir}/style.scss`, data.split('[component]').join(name), 'utf8', function (err) {
-            if (err) return console.log(err)
-        })
-      })
-      console.log()
-      console.log(chalk.green(`[创建成功]  ${path.resolve(`./src/components/${name}`)}`))
-      console.log()
     })
-  }
+    fs.readFile(`${putDir}/style.scss`, 'utf8', function (err, data) {
+      fs.writeFile(`${putDir}/style.scss`, data.split('[component]').join(name), 'utf8', function (err) {
+          if (err) return console.log(err)
+      })
+    })
+    console.log()
+    console.log(chalk.green(`[创建成功]  ${path.resolve(`./src/components/${name}`)}`))
+    console.log()
+  })
+}
 
 // program
 //   .command('*')
