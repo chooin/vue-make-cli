@@ -15,7 +15,7 @@ program
   .description(chalk.gray('    # create mixin file'))
   .action(function (name, options) {
     var putDir = `./src/mixins/${name}.js`
-    fse.copy(`${__dirname}/../templates/[mixin].js`, putDir).then(() => {
+    fse.copy(path.resolve(__dirname, '../templates/[mixin].js'), putDir).then(() => {
       fs.readFile(putDir, 'utf8', function (err, data) {
         fs.writeFile(putDir, data.split('[mixin]').join(name), 'utf8', function (err) {
            if (err) return console.log(err)
@@ -38,7 +38,17 @@ program
   .command('directive [name]')
   .description(chalk.gray('    # create directive file'))
   .action(function (name, options) {
-    console.log(name)
+    var putDir = `./src/directives/${name}.js`
+    fse.copy(path.resolve(__dirname, '../templates/[directive].js'), putDir).then(() => {
+      fs.readFile(putDir, 'utf8', function (err, data) {
+        fs.writeFile(putDir, data.split('[directive]').join(name), 'utf8', function (err) {
+           if (err) return console.log(err)
+        })
+      })
+      console.log()
+      console.log(chalk.yellow(`创建 directive 成功`))
+      console.log()
+    })
   })
 
 program
@@ -70,7 +80,7 @@ program
 
 function createComponent (name) {
   var putDir = `./src/components/${name}`
-  fse.copy(`${__dirname}/../templates/[component]`, putDir).then(() => {
+  fse.copy(path.resolve(__dirname, '../templates/[component]'), putDir).then(() => {
     fs.readFile(`${putDir}/index.vue`, 'utf8', function (err, data) {
       fs.writeFile(`${putDir}/index.vue`, data.split('[component]').join(name), 'utf8', function (err) {
           if (err) return console.log(err)

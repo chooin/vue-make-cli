@@ -1,16 +1,14 @@
 # vue-make-cli
 
-# 安装
+### 安装
 
 ``` sh
 yarn global add vue-make-cli
-
 # or
-
 npm install vue-make-cli -g
 ```
 
-# 快速开始
+### 快速开始
 
 ``` sh
 vue-make mixin [name]            # 创建 mixin 文件

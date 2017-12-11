@@ -18,10 +18,8 @@
   "dependencies": {
     "chalk": "^2.3.0",
     "commander": "^2.12.2",
-    "fs": "0.0.1-security",
     "fs-extra": "^4.0.3",
-    "inquirer": "^4.0.1",
-    "shelljs": "^0.7.8"
+    "inquirer": "^4.0.1"
   },
   "main": "index.js",
   "devDependencies": {},
