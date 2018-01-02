@@ -3,9 +3,9 @@
 const program = require('commander')
 const chalk = require('chalk')
 const fs = require('fs')
-const fse = require('fs-extra')
 const inquirer = require('inquirer')
 const path = require('path')
+const { createFile } = require('../utils/create-file')
 
 program
   .version('0.0.1')
@@ -13,17 +13,10 @@ program
 program
   .command('mixin [name]')
   .description(chalk.gray('    # create mixin file'))
-  .action(function (name, options) {
-    var putDir = `./src/mixins/${name}.js`
-    fse.copy(path.resolve(__dirname, '../templates/[mixin].js'), putDir).then(() => {
-      fs.readFile(putDir, 'utf8', function (err, data) {
-        fs.writeFile(putDir, data.split('[mixin]').join(name), 'utf8', function (err) {
-           if (err) return console.log(err)
-        })
-      })
-      console.log()
-      console.log(chalk.yellow(`Create mixin success`))
-      console.log()
+  .action((name, options) => {
+    createFile({
+      from: path.resolve(__dirname, '../templates/[mixin].js'),
+      to: `./src/mixins/${name}.js`
     })
   })
 
@@ -38,7 +31,8 @@ program
   .command('directive [name]')
   .description(chalk.gray('    # create directive file'))
   .action(function (name, options) {
-    var putDir = `./src/directives/${name}.js`
+
+    let putDir = `./src/directives/${name}.js`
     fse.copy(path.resolve(__dirname, '../templates/[directive].js'), putDir).then(() => {
       fs.readFile(putDir, 'utf8', function (err, data) {
         fs.writeFile(putDir, data.split('[directive]').join(name), 'utf8', function (err) {
@@ -54,14 +48,40 @@ program
 program
   .command('view [path]')
   .description(chalk.gray('    # create view file'))
-  .action(function (path, options) {
+  .action((name, options) => {
+    let split = name.split('/')
+    let hasFile = fs.existsSync(path.resolve(`./src/views/${name}`))
+    if (hasFile) {
+      inquirer.prompt([{
+        type: 'confirm',
+        message: '视图已存在是否继续？',
+        name: 'ok',
+        default: false
+      }]).then(answers => {
+        if (answers.ok) {
+          createFile({
+            name,
+            type: 'view'
+          })
+        } else {
+          console.log('已取消，生成视图')
+        }
+      }).catch(_ => {
+        console.log(_)
+      })
+    } else {
+      createFile({
+        name,
+        type: 'view'
+      })
+    }
   })
 
 program
   .command('component [name]')
   .description(chalk.gray('    # create component file'))
-  .action(function (name, options) {
-    var hasFile = fs.existsSync(path.resolve(`./src/components/${name}`))
+  .action((name, options) => {
+    let hasFile = fs.existsSync(path.resolve(`./src/components/${name}`))
     if (hasFile) {
       inquirer.prompt([{
         type: 'confirm',
@@ -69,33 +89,24 @@ program
         name: 'ok',
         default: false
       }]).then(answers => {
-        if (answers.ok) createComponent(name)
+        if (answers.ok) {
+          createFile({
+            name,
+            type: 'component'
+          })
+        } else {
+          console.log('已取消，生成视图')
+        }
       }).catch(_ => {
         console.log(_)
       })
     } else {
-      createComponent(name)
+      createFile({
+        name,
+        type: 'component'
+      })
     }
   })
-
-function createComponent (name) {
-  var putDir = `./src/components/${name}`
-  fse.copy(path.resolve(__dirname, '../templates/[component]'), putDir).then(() => {
-    fs.readFile(`${putDir}/index.vue`, 'utf8', function (err, data) {
-      fs.writeFile(`${putDir}/index.vue`, data.split('[component]').join(name), 'utf8', function (err) {
-          if (err) return console.log(err)
-      })
-    })
-    fs.readFile(`${putDir}/style.scss`, 'utf8', function (err, data) {
-      fs.writeFile(`${putDir}/style.scss`, data.split('[component]').join(name), 'utf8', function (err) {
-          if (err) return console.log(err)
-      })
-    })
-    console.log()
-    console.log(chalk.green(`[创建成功]  ${path.resolve(`./src/components/${name}`)}`))
-    console.log()
-  })
-}
 
 // program
 //   .command('*')

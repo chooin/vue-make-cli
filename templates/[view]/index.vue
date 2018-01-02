@@ -6,6 +6,7 @@
 
 <script>
 export default {
+  name: '[view]',
   data () {
     return {
 
