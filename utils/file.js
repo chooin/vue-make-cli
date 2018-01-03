@@ -25,7 +25,7 @@ module.exports.createFile = ({
 module.exports.hasFile = ({
   to
 }) => {
-  return new Promise ((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (fs.existsSync(path.resolve(to))) {
       inquirer.prompt([{
         type: 'confirm',
