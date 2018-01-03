@@ -24,7 +24,10 @@ program
   .command('store [moduleName]')
   .description(chalk.gray('    # create module file for store'))
   .action(function (moduleName, options) {
-    console.log(moduleName)
+    // createFile({
+    //   from: path.resolve(__dirname, '../templates/[mixin].js'),
+    //   to: `./src/mixins/${name}.js`
+    // })
   })
 
 program
@@ -41,63 +44,24 @@ program
   .command('view [path]')
   .description(chalk.gray('    # create view file'))
   .action((name, options) => {
-    let split = name.split('/')
-    let hasFile = fs.existsSync(path.resolve(`./src/views/${name}`))
-    if (hasFile) {
-      inquirer.prompt([{
-        type: 'confirm',
-        message: '视图已存在是否继续？',
-        name: 'ok',
-        default: false
-      }]).then(answers => {
-        if (answers.ok) {
-          createFile({
-            name,
-            type: 'view'
-          })
-        } else {
-          console.log('已取消，生成视图')
-        }
-      }).catch(_ => {
-        console.log(_)
-      })
-    } else {
+    fs.readdirSync('./templates/[view]').forEach(file => {
       createFile({
-        name,
-        type: 'view'
+        from: path.resolve(__dirname, `../templates/[view]/${file}`),
+        to: `./src/views/${name}/${file}`
       })
-    }
+    })
   })
 
 program
   .command('component [name]')
   .description(chalk.gray('    # create component file'))
   .action((name, options) => {
-    let hasFile = fs.existsSync(path.resolve(`./src/components/${name}`))
-    if (hasFile) {
-      inquirer.prompt([{
-        type: 'confirm',
-        message: '组件已存在是否继续？',
-        name: 'ok',
-        default: false
-      }]).then(answers => {
-        if (answers.ok) {
-          createFile({
-            name,
-            type: 'component'
-          })
-        } else {
-          console.log('已取消，生成视图')
-        }
-      }).catch(_ => {
-        console.log(_)
-      })
-    } else {
+    fs.readdirSync('./templates/[component]').forEach(file => {
       createFile({
-        name,
-        type: 'component'
+        from: path.resolve(__dirname, `../templates/[component]/${file}`),
+        to: `./src/components/${name}/${file}`
       })
-    }
+    })
   })
 
 // program
