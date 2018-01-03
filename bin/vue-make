@@ -64,17 +64,17 @@ program
   })
 
 program
-  .command('view [path]')
+  .command('view [viewPath]')
   .description(chalk.gray('    # create view file'))
-  .action((name, options) => {
+  .action((viewPath, options) => {
     hasFile({
-      to: `./src/views/${name}`
+      to: `./src/views/${viewPath}`
     }).then(() => {
       fs.readdirSync(path.resolve(__dirname, '../templates/[view]')).forEach(file => {
         createFile({
           from: path.resolve(__dirname, `../templates/[view]/${file}`),
-          to: `./src/views/${name}/${file}`,
-          replaceKey: name
+          to: `./src/views/${viewPath}/${file}`,
+          replaceKey: viewPath.split('/').pop().toLowerCase()
         })
       })
     }).catch(() => {
