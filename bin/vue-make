@@ -5,7 +5,10 @@ const chalk = require('chalk')
 const fs = require('fs')
 const inquirer = require('inquirer')
 const path = require('path')
-const { createFile } = require('../utils/create-file')
+const {
+  createFile,
+  hasFile
+} = require('../utils/create-file')
 
 program
   .version('0.0.1')
@@ -14,9 +17,16 @@ program
   .command('mixin [name]')
   .description(chalk.gray('    # create mixin file'))
   .action((name, options) => {
-    createFile({
-      from: path.resolve(__dirname, '../templates/[mixin].js'),
+    hasFile({
       to: `./src/mixins/${name}.js`
+    }).then(() => {
+      createFile({
+        from: path.resolve(__dirname, '../templates/[mixin].js'),
+        to: `./src/mixins/${name}.js`,
+        replaceKey: name
+      })
+    }).catch(() => {
+      console.log('已取消')
     })
   })
 
@@ -24,19 +34,33 @@ program
   .command('store [moduleName]')
   .description(chalk.gray('    # create module file for store'))
   .action(function (moduleName, options) {
-    // createFile({
-    //   from: path.resolve(__dirname, '../templates/[mixin].js'),
-    //   to: `./src/mixins/${name}.js`
-    // })
+    hasFile({
+      to: `./src/store/modules/${moduleName}.js`
+    }).then(() => {
+      createFile({
+        from: path.resolve(__dirname, '../templates/[store-module].js'),
+        to: `./src/store/modules/${moduleName}.js`,
+        replaceKey: moduleName
+      })
+    }).catch(() => {
+      console.log('已取消')
+    })
   })
 
 program
   .command('directive [name]')
   .description(chalk.gray('    # create directive file'))
   .action(function (name, options) {
-    createFile({
-      from: path.resolve(__dirname, '../templates/[directive].js'),
+    hasFile({
       to: `./src/directives/${name}.js`
+    }).then(() => {
+      createFile({
+        from: path.resolve(__dirname, '../templates/[directive].js'),
+        to: `./src/directives/${name}.js`,
+        replaceKey: name
+      })
+    }).catch(() => {
+      console.log('已取消')
     })
   })
 
@@ -44,11 +68,18 @@ program
   .command('view [path]')
   .description(chalk.gray('    # create view file'))
   .action((name, options) => {
-    fs.readdirSync('./templates/[view]').forEach(file => {
-      createFile({
-        from: path.resolve(__dirname, `../templates/[view]/${file}`),
-        to: `./src/views/${name}/${file}`
+    hasFile({
+      to: `./src/views/${name}`
+    }).then(() => {
+      fs.readdirSync('./templates/[view]').forEach(file => {
+        createFile({
+          from: path.resolve(__dirname, `../templates/[view]/${file}`),
+          to: `./src/views/${name}/${file}`,
+          replaceKey: name
+        })
       })
+    }).catch(() => {
+      console.log('已取消')
     })
   })
 
@@ -56,11 +87,18 @@ program
   .command('component [name]')
   .description(chalk.gray('    # create component file'))
   .action((name, options) => {
-    fs.readdirSync('./templates/[component]').forEach(file => {
-      createFile({
-        from: path.resolve(__dirname, `../templates/[component]/${file}`),
-        to: `./src/components/${name}/${file}`
+    hasFile({
+      to: `./src/components/${name}`
+    }).then(() => {
+      fs.readdirSync('./templates/[component]').forEach(file => {
+        createFile({
+          from: path.resolve(__dirname, `../templates/[component]/${file}`),
+          to: `./src/components/${name}/${file}`,
+          replaceKey: name
+        })
       })
+    }).catch(() => {
+      console.log('已取消')
     })
   })
 

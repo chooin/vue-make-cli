@@ -1,12 +1,12 @@
 <template>
-  <div class="[component]">
+  <div class="[replace]">
 
   </div>
 </template>
 
 <script>
 export default {
-  name: '[component]',
+  name: '[replace]',
   data () {
     return {
 

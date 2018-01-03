@@ -4,59 +4,45 @@ const fse = require('fs-extra')
 const chalk = require('chalk')
 const inquirer = require('inquirer')
 
-const replaceTemplateFile = ({
-  to
+module.exports.createFile = ({
+  from,
+  to,
+  replaceKey
 }) => {
-  let fileName = to.split('/').pop().toLowerCase()
-  fs.readFile(to, 'utf8', (err, data) => {
-    fs.writeFile(to, data.split(`[replace]`).join(fileName.split('.').shift().toLowerCase()), 'utf8', err => {
-      if (err) {
-        return console.log(err)
-      } else {
-        console.log(chalk.yellow(`[创建成功]  ${path.resolve(to)}`))
-      }
+  fse.copy(from, to).then(() => {
+    fs.readFile(to, 'utf8', (err, data) => {
+      fs.writeFile(to, data.split(`[replace]`).join(replaceKey), 'utf8', err => {
+        if (err) {
+          return console.log(err)
+        } else {
+          console.log(chalk.yellow(`[创建成功]  ${path.resolve(to)}`))
+        }
+      })
     })
   })
 }
 
-const createFile = ({
-  from,
+module.exports.hasFile = ({
   to
 }) => {
-  if (fs.existsSync(path.resolve(to))) {
-    inquirer.prompt([{
-      type: 'confirm',
-      message: '文件已存在是否继续？',
-      name: 'ok',
-      default: false
-    }]).then(answers => {
-      if (answers.ok) {
-        fse.copy(from, to).then(() => {
-          replaceTemplateFile({
-            to
-          })
-        })
-      } else {
-        console.log()
-        console.log('已取消')
-        console.log()
-      }
-    }).catch(_ => {
-      console.log(_)
-    })
-  } else {
-    fse.copy(from, to).then(() => {
-      replaceTemplateFile({
-        to
+  return new Promise ((resolve, reject) => {
+    if (fs.existsSync(path.resolve(to))) {
+      inquirer.prompt([{
+        type: 'confirm',
+        message: '文件已存在是否继续？',
+        name: 'ok',
+        default: false
+      }]).then(answers => {
+        if (answers.ok) {
+          resolve()
+        } else {
+          reject()
+        }
+      }).catch(_ => {
+        console.log(_)
       })
-    })
-  }
+    } else {
+      resolve()
+    }
+  })
 }
-
-const createComponent = ({
-
-}) => {
-
-}
-
-module.exports.createFile = createFile
