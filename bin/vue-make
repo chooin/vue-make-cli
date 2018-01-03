@@ -8,10 +8,10 @@ const path = require('path')
 const {
   createFile,
   hasFile
-} = require('../utils/create-file')
+} = require('../utils/file')
 
 program
-  .version('0.0.1')
+  .version('1.0.0')
 
 program
   .command('mixin [name]')
