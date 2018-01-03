@@ -33,7 +33,7 @@ program
 program
   .command('store [moduleName]')
   .description(chalk.gray('    # create module file for store'))
-  .action(function (moduleName, options) {
+  .action((moduleName, options) => {
     hasFile({
       to: `./src/store/modules/${moduleName}.js`
     }).then(() => {
@@ -50,7 +50,7 @@ program
 program
   .command('directive [name]')
   .description(chalk.gray('    # create directive file'))
-  .action(function (name, options) {
+  .action((name, options) => {
     hasFile({
       to: `./src/directives/${name}.js`
     }).then(() => {
