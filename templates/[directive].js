@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-Vue.directive('[directive]', {
+Vue.directive('[replace]', {
   bind () {},
   inserted () {},
   update () {},

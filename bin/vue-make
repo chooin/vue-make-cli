@@ -31,17 +31,9 @@ program
   .command('directive [name]')
   .description(chalk.gray('    # create directive file'))
   .action(function (name, options) {
-
-    let putDir = `./src/directives/${name}.js`
-    fse.copy(path.resolve(__dirname, '../templates/[directive].js'), putDir).then(() => {
-      fs.readFile(putDir, 'utf8', function (err, data) {
-        fs.writeFile(putDir, data.split('[directive]').join(name), 'utf8', function (err) {
-           if (err) return console.log(err)
-        })
-      })
-      console.log()
-      console.log(chalk.yellow(`创建 directive 成功`))
-      console.log()
+    createFile({
+      from: path.resolve(__dirname, '../templates/[directive].js'),
+      to: `./src/directives/${name}.js`
     })
   })
 
