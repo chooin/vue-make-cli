@@ -1,5 +1,7 @@
 # vue-make-cli
 
+[![Build Status](https://travis-ci.org/Hema-FE/vue-make-cli.svg?branch=master)](https://travis-ci.org/Hema-FE/vue-make-cli)
+
 ### 安装
 
 ``` sh
