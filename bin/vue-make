@@ -20,7 +20,7 @@ program
       to: `./.vue-make-cli.json`
     }).then(() => {
       createFile({
-        from: path.resolve(__dirname, '../templates/.vue-make-cli.json'),
+        from: path.resolve(__dirname, '../templates/[init].json'),
         to: `./.vue-make-cli.json`
       })
     }).catch(() => {
@@ -123,7 +123,7 @@ program
 //     console.log(name, options)
 //   })
 
-program.on('--help', function(){
+program.on('--help', () => {
   console.log()
   console.log('  Examples:')
   console.log()
