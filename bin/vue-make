@@ -13,8 +13,24 @@ program
   .version('1.0.13')
 
 program
+  .command('init')
+  .description(chalk.gray('Init'))
+  .action(() => {
+    hasFile({
+      to: `./.vue-make-cli.json`
+    }).then(() => {
+      createFile({
+        from: path.resolve(__dirname, '../templates/[init].json'),
+        to: `./.vue-make-cli.json`
+      })
+    }).catch(() => {
+      console.log('已取消')
+    })
+  })
+
+program
   .command('mixin [name]')
-  .description(chalk.gray('    # create mixin file'))
+  .description(chalk.gray('Create a new mixin'))
   .action((name, options) => {
     hasFile({
       to: `./src/mixins/${name}.js`
@@ -31,7 +47,7 @@ program
 
 program
   .command('store [moduleName]')
-  .description(chalk.gray('    # create module file for store'))
+  .description(chalk.gray('Create a new module for store'))
   .action((moduleName, options) => {
     hasFile({
       to: `./src/store/modules/${moduleName}.js`
@@ -48,7 +64,7 @@ program
 
 program
   .command('directive [name]')
-  .description(chalk.gray('    # create directive file'))
+  .description(chalk.gray('Create a new directive'))
   .action((name, options) => {
     hasFile({
       to: `./src/directives/${name}.js`
@@ -65,7 +81,7 @@ program
 
 program
   .command('view [viewPath]')
-  .description(chalk.gray('    # create view file'))
+  .description(chalk.gray('Create a new view'))
   .action((viewPath, options) => {
     hasFile({
       to: `./src/views/${viewPath}`
@@ -84,7 +100,7 @@ program
 
 program
   .command('component [name]')
-  .description(chalk.gray('    # create component file'))
+  .description(chalk.gray('Create a new component'))
   .action((name, options) => {
     hasFile({
       to: `./src/components/${name}`
@@ -107,7 +123,7 @@ program
 //     console.log(name, options)
 //   })
 
-program.on('--help', function(){
+program.on('--help', () => {
   console.log()
   console.log('  Examples:')
   console.log()

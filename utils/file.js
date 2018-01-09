@@ -7,7 +7,7 @@ const inquirer = require('inquirer')
 module.exports.createFile = ({
   from,
   to,
-  replaceKey
+  replaceKey = ''
 }) => {
   fse.copy(from, to).then(() => {
     fs.readFile(to, 'utf8', (err, data) => {

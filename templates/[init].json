@@ -1,0 +1,23 @@
+{
+  "component": {
+    "directory": "./src/components",
+    "prefix": "",
+    "styleType": "scss",
+    "stylePrefix": ""
+  },
+  "view": {
+    "directory": "./src/views",
+    "prefix": "",
+    "styleType": "scss",
+    "stylePrefix": ""
+  },
+  "directive": {
+    "directory": "./src/directives"
+  },
+  "mixin": {
+    "directory": "./src/mixins"
+  },
+  "storeModule": {
+    "directory": "./src/store/modules"
+  }
+}
