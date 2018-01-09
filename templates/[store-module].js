@@ -1,6 +1,7 @@
 import * as types from '../mutation-types'
 
 const initialState = {
+  // code
 }
 
 export default {

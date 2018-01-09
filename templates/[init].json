@@ -2,11 +2,13 @@
   "component": {
     "directory": "./src/components",
     "prefix": "",
+    "styleType": "scss",
     "stylePrefix": ""
   },
   "view": {
     "directory": "./src/views",
     "prefix": "",
+    "styleType": "scss",
     "stylePrefix": ""
   },
   "directive": {
