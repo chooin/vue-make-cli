@@ -15,7 +15,7 @@ module.exports.createFile = ({
         if (err) {
           return console.log(err)
         } else {
-          console.log(chalk.yellow(`[创建成功]  ${path.resolve(to)}`))
+          console.log(chalk.yellow(`[Success]  ${path.resolve(to)}`))
         }
       })
     })
@@ -29,7 +29,7 @@ module.exports.hasFile = ({
     if (fs.existsSync(path.resolve(to))) {
       inquirer.prompt([{
         type: 'confirm',
-        message: '文件已存在是否继续？',
+        message: 'Target file exists. Continue?',
         name: 'ok',
         default: false
       }]).then(answers => {

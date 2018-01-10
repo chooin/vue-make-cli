@@ -24,7 +24,7 @@ program
         to: `./.vue-make-cli.json`
       })
     }).catch(() => {
-      console.log('已取消')
+      console.log('Cancelled')
     })
   })
 
@@ -41,7 +41,7 @@ program
         replaceKey: name
       })
     }).catch(() => {
-      console.log('已取消')
+      console.log('Cancelled')
     })
   })
 
@@ -58,7 +58,7 @@ program
         replaceKey: moduleName
       })
     }).catch(() => {
-      console.log('已取消')
+      console.log('Cancelled')
     })
   })
 
@@ -75,7 +75,7 @@ program
         replaceKey: name
       })
     }).catch(() => {
-      console.log('已取消')
+      console.log('Cancelled')
     })
   })
 
@@ -94,7 +94,7 @@ program
         })
       })
     }).catch(() => {
-      console.log('已取消')
+      console.log('Cancelled')
     })
   })
 
@@ -113,7 +113,7 @@ program
         })
       })
     }).catch(() => {
-      console.log('已取消')
+      console.log('Cancelled')
     })
   })
 

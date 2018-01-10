@@ -9,6 +9,7 @@ before_script:
   - npm install
 
 script:
+  - ./bin/vue-make init
   - ./bin/vue-make mixin mixin
   - ./bin/vue-make store module
   - ./bin/vue-make directive directive
