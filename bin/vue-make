@@ -10,7 +10,7 @@ const {
 } = require('../utils/file')
 
 program
-  .version('1.0.14')
+  .version('1.0.15')
 
 program
   .command('init')
