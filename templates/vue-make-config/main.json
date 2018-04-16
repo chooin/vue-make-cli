@@ -1,14 +1,18 @@
 {
+  "styleType": "scss",
   "component": {
     "directory": "./src/components",
     "prefix": "",
-    "styleType": "scss",
     "stylePrefix": ""
   },
   "view": {
     "directory": "./src/views",
     "prefix": "",
-    "styleType": "scss",
+    "stylePrefix": ""
+  },
+  "page": {
+    "directory": "./src/pages",
+    "prefix": "",
     "stylePrefix": ""
   },
   "directive": {
@@ -17,7 +21,8 @@
   "mixin": {
     "directory": "./src/mixins"
   },
-  "storeModule": {
-    "directory": "./src/store/modules"
+  "store": {
+    "mutationTypesDirectory": "./src/store",
+    "moduleDirectory": "./src/store/modules"
   }
 }
