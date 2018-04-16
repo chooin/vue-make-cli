@@ -17,11 +17,11 @@ program
   .description(chalk.gray('Init'))
   .action(() => {
     hasFile({
-      to: `./.vue-make-cli.json`
+      to: `./.vue-make.json`
     }).then(() => {
       createFile({
         from: path.resolve(__dirname, '../templates/[init].json'),
-        to: `./.vue-make-cli.json`
+        to: `./.vue-make.json`
       })
     }).catch(() => {
       console.log('Cancelled')
@@ -46,8 +46,25 @@ program
   })
 
 program
-  .command('store [moduleName]')
+  .command('store-module [moduleName]')
   .description(chalk.gray('Create a new module for store'))
+  .action((moduleName, options) => {
+    hasFile({
+      to: `./src/store/modules/${moduleName}.js`
+    }).then(() => {
+      createFile({
+        from: path.resolve(__dirname, '../templates/[store-module].js'),
+        to: `./src/store/modules/${moduleName}.js`,
+        replaceKey: moduleName
+      })
+    }).catch(() => {
+      console.log('Cancelled')
+    })
+  })
+
+program
+  .command('store init')
+  .description(chalk.gray('Store init'))
   .action((moduleName, options) => {
     hasFile({
       to: `./src/store/modules/${moduleName}.js`
