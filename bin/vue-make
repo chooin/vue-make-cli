@@ -10,17 +10,18 @@ const {
 } = require('../utils/file')
 
 program
-  .version('1.0.15')
+  .version('2.0.0')
 
 program
   .command('init')
   .description(chalk.gray('Init'))
-  .action(() => {
+  .action(type => {
+    if (typeof type !== 'string') type = 'default'
     hasFile({
       to: `./.vue-make.json`
     }).then(() => {
       createFile({
-        from: path.resolve(__dirname, '../templates/[init].json'),
+        from: path.resolve(__dirname, `../templates/.vue-make/${type}.json`),
         to: `./.vue-make.json`
       })
     }).catch(() => {
@@ -139,7 +140,7 @@ program
   })
 
 program
-  .command('store-module [module-name]')
+  .command('store-module [name]')
   .description(chalk.gray('Create a new module for store'))
   .action((moduleName, options) => {
     hasFile({
