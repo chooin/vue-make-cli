@@ -9,14 +9,21 @@ const {
   hasFile
 } = require('../utils/file')
 
+const excludeFiles = ['.DS_Store']
+const styleType = {
+  scss: 'scss',
+  sass: 'sass',
+  less: 'less',
+  stylus: 'styl'
+}
+
 program
   .version('2.0.0')
 
 program
-  .command('init')
+  .command('init [type]')
   .description(chalk.gray('Init'))
-  .action(type => {
-    if (typeof type !== 'string') type = 'default'
+  .action((type = 'default') => {
     hasFile({
       to: `./.vue-make.json`
     }).then(() => {
@@ -25,7 +32,7 @@ program
         to: `./.vue-make.json`
       })
     }).catch(() => {
-      console.log('Cancelled')
+      console.log(chalk.yellow('Cancelled'))
     })
   })
 
@@ -33,110 +40,88 @@ program
   .command('view [path]')
   .description(chalk.gray('Create a new view'))
   .action((viewPath, options) => {
-    hasFile({
-      to: `./src/views/${viewPath}`
-    }).then(() => {
-      fs.readdirSync(path.resolve(__dirname, '../templates/[view]')).forEach(file => {
-        createFile({
-          from: path.resolve(__dirname, `../templates/[view]/${file}`),
-          to: `./src/views/${viewPath}/${file}`,
-          replaceKey: viewPath.split('/').pop().toLowerCase()
+    if (viewPath) {
+      hasFile({
+        to: `./src/views/${viewPath}`
+      }).then(() => {
+        fs.readdirSync(path.resolve(__dirname, '../templates/[view]')).forEach(file => {
+          if (!excludeFiles.includes(file)) {
+            createFile({
+              from: path.resolve(__dirname, `../templates/[view]/${file}`),
+              to: `./src/views/${viewPath}/${file}`,
+              replaceKey: viewPath.split('/').pop().toLowerCase()
+            })
+          }
         })
+      }).catch(() => {
+        console.log(chalk.yellow('Cancelled'))
       })
-    }).catch(() => {
-      console.log('Cancelled')
-    })
+    }
   })
 
 program
   .command('page [path]')
   .description(chalk.gray('Create a new page'))
   .action((pagePath, options) => {
-    hasFile({
-      to: `./src/pages/${pagePath}`
-    }).then(() => {
-      fs.readdirSync(path.resolve(__dirname, '../templates/[page]')).forEach(file => {
-        createFile({
-          from: path.resolve(__dirname, `../templates/[page]/${file}`),
-          to: `./src/pages/${pagePath}/${file}`,
-          replaceKey: pagePath.split('/').pop().toLowerCase()
+    if (pagePath) {
+      hasFile({
+        to: `./src/pages/${pagePath}`
+      }).then(() => {
+        fs.readdirSync(path.resolve(__dirname, '../templates/[page]')).forEach(file => {
+          if (!excludeFiles.includes(file)) {
+            createFile({
+              from: path.resolve(__dirname, `../templates/[page]/${file}`),
+              to: `./src/pages/${pagePath}/${file}`,
+              replaceKey: pagePath.split('/').pop().toLowerCase()
+            })
+          }
         })
+      }).catch(() => {
+        console.log(chalk.yellow('Cancelled'))
       })
-    }).catch(() => {
-      console.log('Cancelled')
-    })
+    }
   })
-
-// program
-//   .command('util [path]')
-//   .description(chalk.gray('Create a new page'))
-//   .action((utilPath, options) => {
-//     hasFile({
-//       to: `./src/pages/${utilPath}`
-//     }).then(() => {
-//       fs.readdirSync(path.resolve(__dirname, '../templates/[page]')).forEach(file => {
-//         createFile({
-//           from: path.resolve(__dirname, `../templates/[page]/${file}`),
-//           to: `./src/pages/${utilPath}/${file}`,
-//           replaceKey: utilPath.split('/').pop().toLowerCase()
-//         })
-//       })
-//     }).catch(() => {
-//       console.log('Cancelled')
-//     })
-//   })
 
 program
   .command('component [name]')
   .description(chalk.gray('Create a new component'))
   .action((name, options) => {
-    hasFile({
-      to: `./src/components/${name}`
-    }).then(() => {
-      fs.readdirSync(path.resolve(__dirname, '../templates/[component]')).forEach(file => {
-        createFile({
-          from: path.resolve(__dirname, `../templates/[component]/${file}`),
-          to: `./src/components/${name}/${file}`,
-          replaceKey: name
+    if (name) {
+      hasFile({
+        to: `./src/components/${name}`
+      }).then(() => {
+        fs.readdirSync(path.resolve(__dirname, '../templates/[component]')).forEach(file => {
+          if (!excludeFiles.includes(file)) {
+            createFile({
+              from: path.resolve(__dirname, `../templates/[component]/${file}`),
+              to: `./src/components/${name}/${file}`,
+              replaceKey: name
+            })
+          }
         })
+      }).catch(() => {
+        console.log(chalk.yellow('Cancelled'))
       })
-    }).catch(() => {
-      console.log('Cancelled')
-    })
+    }
   })
 
 program
   .command('mixin [name]')
   .description(chalk.gray('Create a new mixin'))
   .action((name, options) => {
-    hasFile({
-      to: `./src/mixins/${name}.js`
-    }).then(() => {
-      createFile({
-        from: path.resolve(__dirname, '../templates/[mixin].js'),
-        to: `./src/mixins/${name}.js`,
-        replaceKey: name
+    if (name) {
+      hasFile({
+        to: `./src/mixins/${name}.js`
+      }).then(() => {
+        createFile({
+          from: path.resolve(__dirname, '../templates/[mixin].js'),
+          to: `./src/mixins/${name}.js`,
+          replaceKey: name
+        })
+      }).catch(() => {
+        console.log(chalk.yellow('Cancelled'))
       })
-    }).catch(() => {
-      console.log('Cancelled')
-    })
-  })
-
-program
-  .command('store')
-  .description(chalk.gray('Store init'))
-  .action((moduleName, options) => {
-    hasFile({
-      to: `./src/store/modules/${moduleName}.js`
-    }).then(() => {
-      createFile({
-        from: path.resolve(__dirname, '../templates/[store-module].js'),
-        to: `./src/store/modules/${moduleName}.js`,
-        replaceKey: moduleName
-      })
-    }).catch(() => {
-      console.log('Cancelled')
-    })
+    }
   })
 
 program
@@ -152,7 +137,7 @@ program
         replaceKey: moduleName
       })
     }).catch(() => {
-      console.log('Cancelled')
+      console.log(chalk.yellow('Cancelled'))
     })
   })
 
@@ -169,7 +154,7 @@ program
         replaceKey: name
       })
     }).catch(() => {
-      console.log('Cancelled')
+      console.log(chalk.yellow('Cancelled'))
     })
   })
 

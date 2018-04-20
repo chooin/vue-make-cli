@@ -14,13 +14,13 @@ module.exports.createFile = ({
       if (data) {
         fs.writeFile(to, data.split(`[replace]`).join(replaceKey), 'utf8', err => {
           if (err) {
-            return console.log(err)
+            console.log(`${chalk.red(`[error]`)}`)
           } else {
-            console.log(chalk.yellow(`[Success]  ${path.resolve(to)}`))
+            console.log(`${chalk.green(`[complete] `)}${path.resolve(to)}`)
           }
         })
       } else {
-        console.log(chalk.yellow(`[Success]  ${path.resolve(to)}`))
+        console.log(`${chalk.green(`[complete] `)}${path.resolve(to)}`)
       }
     })
   })

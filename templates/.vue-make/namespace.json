@@ -24,7 +24,6 @@
     "directory": "./src/mixins"
   },
   "store": {
-    "mutationTypesDirectory": "./src/store",
-    "moduleDirectory": "./src/store/modules"
+    "directory": "./src/store"
   }
 }
