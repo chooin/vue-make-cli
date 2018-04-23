@@ -12,7 +12,12 @@ module.exports.createFile = ({
   fse.copy(from, to).then(() => {
     fs.readFile(to, 'utf8', (err, data) => {
       if (data) {
-        for (let i in replace) data = data.replace(replace[i].from, replace[i].to)
+        for (let i in replace) {
+          data = data.replace(
+            new RegExp(`\\[${replace[i].from}\\]`, 'g'),
+            replace[i].to
+          )
+        }
         fs.writeFile(to, data, 'utf8', err => {
           if (err) {
             console.log(`${chalk.red(`[error]`)}`)

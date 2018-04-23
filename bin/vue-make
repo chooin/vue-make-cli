@@ -51,11 +51,11 @@ program
               to: `./src/views/${viewPath}/${file}`,
               replace: [
                 {
-                  from: /\[replace\]/g,
+                  from: 'replace',
                   to: viewPath.split('/').pop().toLowerCase()
                 },
                 {
-                  from: /\[styleType\]/g,
+                  from: 'styleType',
                   to: ''
                 }
               ]
@@ -83,11 +83,11 @@ program
               to: `./src/pages/${pagePath}/${file}`,
               replace: [
                 {
-                  from: /\[replace\]/g,
+                  from: 'replace',
                   to: pagePath.split('/').pop().toLowerCase()
                 },
                 {
-                  from: /\[styleType\]/g,
+                  from: 'styleType',
                   to: ''
                 }
               ]
@@ -115,11 +115,11 @@ program
               to: `./src/components/${name}/${file}`,
               replace: [
                 {
-                  from: /\[replace\]/g,
+                  from: 'replace',
                   to: name
                 },
                 {
-                  from: /\[styleType\]/g,
+                  from: 'styleType',
                   to: ''
                 }
               ]
@@ -145,7 +145,7 @@ program
           to: `./src/mixins/${name}.js`,
           replace: [
             {
-              from: /\[replace\]/g,
+              from: 'replace',
               to: name
             }
           ]
@@ -168,7 +168,7 @@ program
         to: `./src/store/modules/${moduleName}.js`,
         replace: [
           {
-            from: /\[replace\]/g,
+            from: 'replace',
             to: moduleName
           }
         ]
@@ -190,7 +190,7 @@ program
         to: `./src/directives/${name}.js`,
         replace: [
           {
-            from: /\[replace\]/g,
+            from: 'replace',
             to: name
           }
         ]
