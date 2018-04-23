@@ -9,7 +9,15 @@ const {
   hasFile
 } = require('../utils/file')
 
-const excludeFiles = ['.DS_Store']
+try {
+  config = JSON.parse(
+    fs.readFileSync('./.vue-make.json', 'utf8') ||
+    fs.readFileSync(path.resolve(__dirname, './.vue-make.json', 'utf8'))
+  )
+} catch (e) {
+  throw `解析配置文件出错`
+}
+
 const styleType = {
   scss: 'scss',
   sass: 'sass',
@@ -37,38 +45,6 @@ program
   })
 
 program
-  .command('view [path]')
-  .description(chalk.gray('Create a new view'))
-  .action((viewPath, options) => {
-    if (viewPath) {
-      hasFile({
-        to: `./src/views/${viewPath}`
-      }).then(() => {
-        fs.readdirSync(path.resolve(__dirname, '../templates/[view]')).forEach(file => {
-          if (!excludeFiles.includes(file)) {
-            createFile({
-              from: path.resolve(__dirname, `../templates/[view]/${file}`),
-              to: `./src/views/${viewPath}/${file}`,
-              replace: [
-                {
-                  from: 'viewName',
-                  to: viewPath.split('/').pop().toLowerCase()
-                },
-                {
-                  from: 'styleType',
-                  to: ''
-                }
-              ]
-            })
-          }
-        })
-      }).catch(() => {
-        console.log(chalk.yellow('cancelled'))
-      })
-    }
-  })
-
-program
   .command('page [path]')
   .description(chalk.gray('Create a new page'))
   .action((pagePath, options) => {
@@ -76,24 +52,86 @@ program
       hasFile({
         to: `./src/pages/${pagePath}`
       }).then(() => {
-        fs.readdirSync(path.resolve(__dirname, '../templates/[page]')).forEach(file => {
-          if (!excludeFiles.includes(file)) {
-            createFile({
-              from: path.resolve(__dirname, `../templates/[page]/${file}`),
-              to: `./src/pages/${pagePath}/${file}`,
-              replace: [
-                {
-                  from: 'pageName',
-                  to: pagePath.split('/').pop().toLowerCase()
-                },
-                {
-                  from: 'styleType',
-                  to: ''
-                }
-              ]
-            })
-          }
+        let name = pagePath.split('/').pop().toLowerCase()
+        createFile({
+          from: path.resolve(__dirname, `../templates/[page]/index.vue`),
+          to: `./src/pages/${pagePath}/index.vue`,
+          replace: [
+            {
+              from: 'name',
+              to: name
+            },
+            {
+              from: 'styleType',
+              to: ''
+            }
+          ]
         })
+        let styleName = styleType[config.styleType] && `style.${styleType[config.styleType]}`
+        if (
+          config.styleType &&
+          styleName
+        ) {
+          createFile({
+            from: path.resolve(__dirname, `../templates/style/${styleName}`),
+            to: `./src/pages/${pagePath}/${styleName}`,
+            replace: [
+              {
+                from: 'name',
+                to: name
+              }
+            ]
+          })
+        } else {
+          console.log(chalk.yellow('create style failed'))
+        }
+      }).catch(() => {
+        console.log(chalk.yellow('cancelled'))
+      })
+    }
+  })
+
+program
+  .command('view [path]')
+  .description(chalk.gray('Create a new view'))
+  .action((viewPath, options) => {
+    if (viewPath) {
+      hasFile({
+        to: `./src/views/${viewPath}`
+      }).then(() => {
+        let name = viewPath.split('/').pop().toLowerCase()
+        createFile({
+          from: path.resolve(__dirname, `../templates/[view]/index.vue`),
+          to: `./src/views/${viewPath}/index.vue`,
+          replace: [
+            {
+              from: 'name',
+              to: name
+            },
+            {
+              from: 'styleType',
+              to: ''
+            }
+          ]
+        })
+        let styleName = styleType[config.styleType] && `style.${styleType[config.styleType]}`
+        if (
+          config.styleType &&
+          styleName
+        ) {
+          createFile({
+            from: path.resolve(__dirname, `../templates/style/${styleName}`),
+            to: `./src/views/${viewPath}/${styleName}`,
+            replace: [
+              {
+                from: 'name',
+                to: name
+              }
+            ]
+          })
+        } else {
+          console.log(chalk.yellow('create style failed'))
+        }
       }).catch(() => {
         console.log(chalk.yellow('cancelled'))
       })
@@ -108,24 +146,38 @@ program
       hasFile({
         to: `./src/components/${name}`
       }).then(() => {
-        fs.readdirSync(path.resolve(__dirname, '../templates/[component]')).forEach(file => {
-          if (!excludeFiles.includes(file)) {
-            createFile({
-              from: path.resolve(__dirname, `../templates/[component]/${file}`),
-              to: `./src/components/${name}/${file}`,
-              replace: [
-                {
-                  from: 'componentName',
-                  to: name
-                },
-                {
-                  from: 'styleType',
-                  to: ''
-                }
-              ]
-            })
-          }
+        createFile({
+          from: path.resolve(__dirname, `../templates/[component]/index.vue`),
+          to: `./src/components/${name}/index.vue`,
+          replace: [
+            {
+              from: 'name',
+              to: name
+            },
+            {
+              from: 'styleType',
+              to: ''
+            }
+          ]
         })
+        let styleName = styleType[config.styleType] && `style.${styleType[config.styleType]}`
+        if (
+          config.styleType &&
+          styleName
+        ) {
+          createFile({
+            from: path.resolve(__dirname, `../templates/style/${styleName}`),
+            to: `./src/components/${name}/${styleName}`,
+            replace: [
+              {
+                from: 'name',
+                to: name
+              }
+            ]
+          })
+        } else {
+          console.log(chalk.yellow('create style failed'))
+        }
       }).catch(() => {
         console.log(chalk.yellow('cancelled'))
       })
@@ -145,7 +197,7 @@ program
           to: `./src/mixins/${name}.js`,
           replace: [
             {
-              from: 'mixinName',
+              from: 'name',
               to: name
             }
           ]
@@ -165,13 +217,7 @@ program
     }).then(() => {
       createFile({
         from: path.resolve(__dirname, '../templates/[store-module].js'),
-        to: `./src/store/modules/${moduleName}.js`,
-        replace: [
-          {
-            from: 'replace',
-            to: moduleName
-          }
-        ]
+        to: `./src/store/modules/${moduleName}.js`
       })
     }).catch(() => {
       console.log(chalk.yellow('cancelled'))
@@ -190,7 +236,7 @@ program
         to: `./src/directives/${name}.js`,
         replace: [
           {
-            from: 'replace',
+            from: 'name',
             to: name
           }
         ]
@@ -199,12 +245,6 @@ program
       console.log(chalk.yellow('cancelled'))
     })
   })
-
-// program
-//   .command('*')
-//   .action(function (name, options) {
-//     console.log(name, options)
-//   })
 
 program.on('--help', () => {
   console.log()
