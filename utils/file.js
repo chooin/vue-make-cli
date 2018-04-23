@@ -7,12 +7,13 @@ const inquirer = require('inquirer')
 module.exports.createFile = ({
   from,
   to,
-  replaceKey = ''
+  replace = []
 }) => {
   fse.copy(from, to).then(() => {
     fs.readFile(to, 'utf8', (err, data) => {
       if (data) {
-        fs.writeFile(to, data.split(`[replace]`).join(replaceKey), 'utf8', err => {
+        for (let i in replace) data = data.replace(replace[i].from, replace[i].to)
+        fs.writeFile(to, data, 'utf8', err => {
           if (err) {
             console.log(`${chalk.red(`[error]`)}`)
           } else {

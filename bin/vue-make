@@ -32,7 +32,7 @@ program
         to: `./.vue-make.json`
       })
     }).catch(() => {
-      console.log(chalk.yellow('Cancelled'))
+      console.log(chalk.yellow('cancelled'))
     })
   })
 
@@ -49,12 +49,21 @@ program
             createFile({
               from: path.resolve(__dirname, `../templates/[view]/${file}`),
               to: `./src/views/${viewPath}/${file}`,
-              replaceKey: viewPath.split('/').pop().toLowerCase()
+              replace: [
+                {
+                  from: /\[replace\]/g,
+                  to: viewPath.split('/').pop().toLowerCase()
+                },
+                {
+                  from: /\[styleType\]/g,
+                  to: ''
+                }
+              ]
             })
           }
         })
       }).catch(() => {
-        console.log(chalk.yellow('Cancelled'))
+        console.log(chalk.yellow('cancelled'))
       })
     }
   })
@@ -72,12 +81,21 @@ program
             createFile({
               from: path.resolve(__dirname, `../templates/[page]/${file}`),
               to: `./src/pages/${pagePath}/${file}`,
-              replaceKey: pagePath.split('/').pop().toLowerCase()
+              replace: [
+                {
+                  from: /\[replace\]/g,
+                  to: pagePath.split('/').pop().toLowerCase()
+                },
+                {
+                  from: /\[styleType\]/g,
+                  to: ''
+                }
+              ]
             })
           }
         })
       }).catch(() => {
-        console.log(chalk.yellow('Cancelled'))
+        console.log(chalk.yellow('cancelled'))
       })
     }
   })
@@ -95,12 +113,21 @@ program
             createFile({
               from: path.resolve(__dirname, `../templates/[component]/${file}`),
               to: `./src/components/${name}/${file}`,
-              replaceKey: name
+              replace: [
+                {
+                  from: /\[replace\]/g,
+                  to: name
+                },
+                {
+                  from: /\[styleType\]/g,
+                  to: ''
+                }
+              ]
             })
           }
         })
       }).catch(() => {
-        console.log(chalk.yellow('Cancelled'))
+        console.log(chalk.yellow('cancelled'))
       })
     }
   })
@@ -116,10 +143,15 @@ program
         createFile({
           from: path.resolve(__dirname, '../templates/[mixin].js'),
           to: `./src/mixins/${name}.js`,
-          replaceKey: name
+          replace: [
+            {
+              from: /\[replace\]/g,
+              to: name
+            }
+          ]
         })
       }).catch(() => {
-        console.log(chalk.yellow('Cancelled'))
+        console.log(chalk.yellow('cancelled'))
       })
     }
   })
@@ -134,10 +166,15 @@ program
       createFile({
         from: path.resolve(__dirname, '../templates/[store-module].js'),
         to: `./src/store/modules/${moduleName}.js`,
-        replaceKey: moduleName
+        replace: [
+          {
+            from: /\[replace\]/g,
+            to: moduleName
+          }
+        ]
       })
     }).catch(() => {
-      console.log(chalk.yellow('Cancelled'))
+      console.log(chalk.yellow('cancelled'))
     })
   })
 
@@ -151,10 +188,15 @@ program
       createFile({
         from: path.resolve(__dirname, '../templates/[directive].js'),
         to: `./src/directives/${name}.js`,
-        replaceKey: name
+        replace: [
+          {
+            from: /\[replace\]/g,
+            to: name
+          }
+        ]
       })
     }).catch(() => {
-      console.log(chalk.yellow('Cancelled'))
+      console.log(chalk.yellow('cancelled'))
     })
   })
 
