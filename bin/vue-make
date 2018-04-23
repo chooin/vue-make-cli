@@ -51,7 +51,7 @@ program
               to: `./src/views/${viewPath}/${file}`,
               replace: [
                 {
-                  from: 'replace',
+                  from: 'viewName',
                   to: viewPath.split('/').pop().toLowerCase()
                 },
                 {
@@ -83,7 +83,7 @@ program
               to: `./src/pages/${pagePath}/${file}`,
               replace: [
                 {
-                  from: 'replace',
+                  from: 'pageName',
                   to: pagePath.split('/').pop().toLowerCase()
                 },
                 {
@@ -115,7 +115,7 @@ program
               to: `./src/components/${name}/${file}`,
               replace: [
                 {
-                  from: 'replace',
+                  from: 'componentName',
                   to: name
                 },
                 {
@@ -145,7 +145,7 @@ program
           to: `./src/mixins/${name}.js`,
           replace: [
             {
-              from: 'replace',
+              from: 'mixinName',
               to: name
             }
           ]

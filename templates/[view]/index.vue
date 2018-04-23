@@ -1,12 +1,12 @@
 <template>
-  <div class="[replace]">
+  <div class="[viewName]">
 
   </div>
 </template>
 
 <script>
 export default {
-  name: '[replace]',
+  name: '[viewName]',
   data () {
     return {
 
