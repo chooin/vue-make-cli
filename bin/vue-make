@@ -9,20 +9,21 @@ const {
   hasFile
 } = require('../utils/file')
 
+const STYLE_TYPE = {
+  scss: 'scss',
+  sass: 'sass',
+  less: 'less',
+  stylus: 'styl'
+}
+
+let CONFIG
 try {
-  config = JSON.parse(
+  CONFIG = JSON.parse(
     fs.readFileSync('./.vue-make.json', 'utf8') ||
     fs.readFileSync(path.resolve(__dirname, './.vue-make.json', 'utf8'))
   )
 } catch (e) {
   throw `解析配置文件出错`
-}
-
-const styleType = {
-  scss: 'scss',
-  sass: 'sass',
-  less: 'less',
-  stylus: 'styl'
 }
 
 program
@@ -50,12 +51,12 @@ program
   .action((pagePath, options) => {
     if (pagePath) {
       hasFile({
-        to: `./src/pages/${pagePath}`
+        to: `${CONFIG.page.directory}${pagePath}`
       }).then(() => {
         let name = pagePath.split('/').pop().toLowerCase()
         createFile({
           from: path.resolve(__dirname, `../templates/[page]/index.vue`),
-          to: `./src/pages/${pagePath}/index.vue`,
+          to: `${CONFIG.page.directory}${pagePath}/index.vue`,
           replace: [
             {
               from: 'name',
@@ -67,14 +68,14 @@ program
             }
           ]
         })
-        let styleName = styleType[config.styleType] && `style.${styleType[config.styleType]}`
+        let styleName = STYLE_TYPE[CONFIG.styleType] && `style.${STYLE_TYPE[CONFIG.styleType]}`
         if (
-          config.styleType &&
+          CONFIG.styleType &&
           styleName
         ) {
           createFile({
             from: path.resolve(__dirname, `../templates/style/${styleName}`),
-            to: `./src/pages/${pagePath}/${styleName}`,
+            to: `${CONFIG.page.directory}${pagePath}/${styleName}`,
             replace: [
               {
                 from: 'name',
@@ -97,12 +98,12 @@ program
   .action((viewPath, options) => {
     if (viewPath) {
       hasFile({
-        to: `./src/views/${viewPath}`
+        to: `${CONFIG.view.directory}${viewPath}`
       }).then(() => {
         let name = viewPath.split('/').pop().toLowerCase()
         createFile({
           from: path.resolve(__dirname, `../templates/[view]/index.vue`),
-          to: `./src/views/${viewPath}/index.vue`,
+          to: `${CONFIG.view.directory}${viewPath}/index.vue`,
           replace: [
             {
               from: 'name',
@@ -114,14 +115,14 @@ program
             }
           ]
         })
-        let styleName = styleType[config.styleType] && `style.${styleType[config.styleType]}`
+        let styleName = STYLE_TYPE[CONFIG.styleType] && `style.${STYLE_TYPE[CONFIG.styleType]}`
         if (
-          config.styleType &&
+          CONFIG.styleType &&
           styleName
         ) {
           createFile({
             from: path.resolve(__dirname, `../templates/style/${styleName}`),
-            to: `./src/views/${viewPath}/${styleName}`,
+            to: `${CONFIG.view.directory}${viewPath}/${styleName}`,
             replace: [
               {
                 from: 'name',
@@ -160,9 +161,9 @@ program
             }
           ]
         })
-        let styleName = styleType[config.styleType] && `style.${styleType[config.styleType]}`
+        let styleName = STYLE_TYPE[CONFIG.styleType] && `style.${STYLE_TYPE[CONFIG.styleType]}`
         if (
-          config.styleType &&
+          CONFIG.styleType &&
           styleName
         ) {
           createFile({

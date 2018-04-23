@@ -1,13 +1,13 @@
 {
   "styleType": "",
-  "view": {
-    "directory": "./src/views",
+  "page": {
+    "directory": "./src/pages",
     "prefix": "",
     "stylePrefix": "",
     "layout": false
   },
-  "page": {
-    "directory": "./src/pages",
+  "view": {
+    "directory": "./src/views",
     "prefix": "",
     "stylePrefix": "",
     "layout": false

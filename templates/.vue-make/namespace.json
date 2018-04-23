@@ -1,15 +1,15 @@
 {
   "styleType": "scss",
-  "view": {
-    "directory": "./src/views",
-    "prefix": "",
-    "stylePrefix": "v-",
-    "layout": true
-  },
   "page": {
     "directory": "./src/pages",
     "prefix": "",
     "stylePrefix": "p-",
+    "layout": true
+  },
+  "view": {
+    "directory": "./src/views",
+    "prefix": "",
+    "stylePrefix": "v-",
     "layout": true
   },
   "component": {
