@@ -1,12 +1,12 @@
 <template>
-  <div class="[replace]">
+  <div class="[className]">
 
   </div>
 </template>
 
 <script>
 export default {
-  name: '[replace]',
+  name: '[name]',
   data () {
     return {
 
@@ -21,6 +21,6 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style[styleType] scoped>
   @import "./style";
 </style>

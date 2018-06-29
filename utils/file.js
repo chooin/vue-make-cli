@@ -7,20 +7,26 @@ const inquirer = require('inquirer')
 module.exports.createFile = ({
   from,
   to,
-  replaceKey = ''
+  replace = []
 }) => {
   fse.copy(from, to).then(() => {
     fs.readFile(to, 'utf8', (err, data) => {
       if (data) {
-        fs.writeFile(to, data.split(`[replace]`).join(replaceKey), 'utf8', err => {
+        for (let i in replace) {
+          data = data.replace(
+            new RegExp(`\\[${replace[i].from}\\]`, 'g'),
+            replace[i].to
+          )
+        }
+        fs.writeFile(to, data, 'utf8', err => {
           if (err) {
-            return console.log(err)
+            console.log(`${chalk.red(`[error]`)}`)
           } else {
-            console.log(chalk.yellow(`[Success]  ${path.resolve(to)}`))
+            console.log(`${chalk.green(`[complete] `)}${path.resolve(to)}`)
           }
         })
       } else {
-        console.log(chalk.yellow(`[Success]  ${path.resolve(to)}`))
+        console.log(`${chalk.green(`[complete] `)}${path.resolve(to)}`)
       }
     })
   })

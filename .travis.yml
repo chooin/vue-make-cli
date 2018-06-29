@@ -1,17 +1,12 @@
 language: node_js
 node_js:
-    - "8"
+    - "9"
 
 notifications:
   email: false
 
 before_script:
-  - npm install
+  - yarn
 
 script:
-  - ./bin/vue-make init
-  - ./bin/vue-make mixin mixin
-  - ./bin/vue-make store module
-  - ./bin/vue-make directive directive
-  - ./bin/vue-make view view
-  - ./bin/vue-make component component
+  - yarn test

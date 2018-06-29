@@ -8,120 +8,264 @@ const {
   createFile,
   hasFile
 } = require('../utils/file')
+const { STYLE_TYPE } = require('../config')
+
+// Set config
+let CONFIG
+try {
+  let configPath = fs.existsSync(path.resolve('./.vue-make.json'))
+    ? './.vue-make.json'
+    : path.resolve(__dirname, '../templates/.vue-make/default.json')
+  CONFIG = JSON.parse(fs.readFileSync(configPath, 'utf8'))
+} catch (e) {
+  throw `error parsing configuration file`
+}
+
+const createStyleFile = ({
+  from,
+  to,
+  name,
+  stylePrefix
+}) => {
+  let styleType = STYLE_TYPE[CONFIG.styleType] || 'css'
+  createFile({
+    from: path.resolve(__dirname, `../templates/style/style.${styleType}`),
+    to: `${to}/style.${styleType}`,
+    replace: [
+      {
+        from: 'className',
+        to: stylePrefix
+          ? `${stylePrefix}${name}`
+          : name
+      }
+    ]
+  })
+}
+
+const cancelled = e => {
+  console.log('')
+  console.log(chalk.yellow('- 已取消'))
+}
 
 program
-  .version('1.0.15')
+  .version('2.0.0')
 
 program
-  .command('init')
-  .description(chalk.gray('Init'))
-  .action(() => {
+  .command('init [type]')
+  .description(chalk.gray('init'))
+  .action((type = 'default') => {
     hasFile({
-      to: `./.vue-make-cli.json`
+      to: `./.vue-make.json`
     }).then(() => {
       createFile({
-        from: path.resolve(__dirname, '../templates/[init].json'),
-        to: `./.vue-make-cli.json`
+        from: path.resolve(__dirname, `../templates/.vue-make/${type}.json`),
+        to: `./.vue-make.json`
       })
-    }).catch(() => {
-      console.log('Cancelled')
-    })
+    }).catch(cancelled)
+  })
+
+program
+  .command('page [path]')
+  .description(chalk.gray('create a new page'))
+  .action((pagePath, options) => {
+    if (pagePath) {
+      if (pagePath.indexOf('/') !== 0) pagePath = `/${pagePath}`
+      hasFile({
+        to: `${CONFIG.page.directory}${pagePath}`
+      }).then(() => {
+        let name = pagePath.split('/').pop().toLowerCase()
+        createFile({
+          from: path.resolve(__dirname, `../templates/[page]/index.vue`),
+          to: `${CONFIG.page.directory}${pagePath}/index.vue`,
+          replace: [
+            {
+              from: 'name',
+              to: name
+            },
+            {
+              from: 'className',
+              to: CONFIG.page.stylePrefix
+                ? `${CONFIG.page.stylePrefix}${name}`
+                : name
+            },
+            {
+              from: 'styleType',
+              to: CONFIG.styleType
+                ? ` lang="${CONFIG.styleType}"`
+                : ''
+            }
+          ]
+        })
+        createStyleFile({
+          to: `${CONFIG.page.directory}${pagePath}`,
+          name,
+          stylePrefix: CONFIG.page.stylePrefix
+        })
+      }).catch(cancelled)
+    }
+  })
+
+program
+  .command('view [path]')
+  .description(chalk.gray('create a new view'))
+  .action((viewPath, options) => {
+    if (viewPath) {
+      if (viewPath.indexOf('/') !== 0) viewPath = `/${viewPath}`
+      hasFile({
+        to: `${CONFIG.view.directory}${viewPath}`
+      }).then(() => {
+        let name = viewPath.split('/').pop().toLowerCase()
+        createFile({
+          from: path.resolve(__dirname, `../templates/[view]/index.vue`),
+          to: `${CONFIG.view.directory}${viewPath}/index.vue`,
+          replace: [
+            {
+              from: 'name',
+              to: name
+            },
+            {
+              from: 'className',
+              to: CONFIG.view.stylePrefix
+                ? `${CONFIG.view.stylePrefix}${name}`
+                : name
+            },
+            {
+              from: 'styleType',
+              to: CONFIG.styleType
+                ? ` lang="${CONFIG.styleType}"`
+                : ''
+            }
+          ]
+        })
+        createStyleFile({
+          to: `${CONFIG.view.directory}${viewPath}`,
+          name,
+          stylePrefix: CONFIG.view.stylePrefix
+        })
+      }).catch(cancelled)
+    }
+  })
+
+program
+  .command('component [name]')
+  .description(chalk.gray('create a new component'))
+  .action((name, options) => {
+    if (name) {
+      hasFile({
+        to: `${CONFIG.component.directory}/${name}`
+      }).then(() => {
+        createFile({
+          from: path.resolve(__dirname, `../templates/[component]/index.vue`),
+          to: `${CONFIG.component.directory}/${name}/index.vue`,
+          replace: [
+            {
+              from: 'name',
+              to: name
+            },
+            {
+              from: 'className',
+              to: CONFIG.component.stylePrefix || CONFIG.component.prefix
+                ? `${CONFIG.component.stylePrefix}${CONFIG.component.prefix}${name}`
+                : name
+            },
+            {
+              from: 'styleType',
+              to: CONFIG.styleType
+                ? ` lang="${CONFIG.styleType}"`
+                : ''
+            }
+          ]
+        })
+        createStyleFile({
+          to: `${CONFIG.component.directory}/${name}`,
+          name,
+          stylePrefix: `${CONFIG.component.stylePrefix}${CONFIG.component.prefix}`
+        })
+      }).catch(cancelled)
+    }
   })
 
 program
   .command('mixin [name]')
-  .description(chalk.gray('Create a new mixin'))
+  .description(chalk.gray('create a new mixin'))
   .action((name, options) => {
-    hasFile({
-      to: `./src/mixins/${name}.js`
-    }).then(() => {
-      createFile({
-        from: path.resolve(__dirname, '../templates/[mixin].js'),
-        to: `./src/mixins/${name}.js`,
-        replaceKey: name
-      })
-    }).catch(() => {
-      console.log('Cancelled')
-    })
+    if (name) {
+      hasFile({
+        to: `${CONFIG.mixin.directory}/${name}.js`
+      }).then(() => {
+        createFile({
+          from: path.resolve(__dirname, '../templates/[mixin].js'),
+          to: `${CONFIG.mixin.directory}/${name}.js`,
+          replace: [
+            {
+              from: 'name',
+              to: name
+            }
+          ]
+        })
+      }).catch(cancelled)
+    }
   })
 
 program
-  .command('store [moduleName]')
-  .description(chalk.gray('Create a new module for store'))
-  .action((moduleName, options) => {
-    hasFile({
-      to: `./src/store/modules/${moduleName}.js`
-    }).then(() => {
+  .command('store-module [name]')
+  .description(chalk.gray('create a new module for store'))
+  .action((name, options) => {
+    const create = () => {
+      hasFile({
+        to: `${CONFIG.store.directory}/modules/${name}.js`
+      }).then(() => {
+        createFile({
+          from: path.resolve(__dirname, '../templates/[store-module].js'),
+          to: `${CONFIG.store.directory}/modules/${name}.js`
+        })
+      }).catch(cancelled)
+    }
+    const store = () => {
       createFile({
-        from: path.resolve(__dirname, '../templates/[store-module].js'),
-        to: `./src/store/modules/${moduleName}.js`,
-        replaceKey: moduleName
+        from: path.resolve(__dirname, '../templates/store/index.js'),
+        to: `${CONFIG.store.directory}/index.js`,
+        replace: [
+          {
+            from: 'name',
+            to: name
+          }
+        ]
       })
+      createFile({
+        from: path.resolve(__dirname, '../templates/store/mutation-types.js'),
+        to: `${CONFIG.store.directory}/mutation-types.js`
+      })
+    }
+    hasFile({
+      to: `${CONFIG.store.directory}/index.js`
+    }).then(() => {
+      store()
+      create()
     }).catch(() => {
-      console.log('Cancelled')
+      create()
     })
   })
 
 program
   .command('directive [name]')
-  .description(chalk.gray('Create a new directive'))
+  .description(chalk.gray('create a new directive'))
   .action((name, options) => {
     hasFile({
-      to: `./src/directives/${name}.js`
+      to: `${CONFIG.directive.directory}/${name}.js`
     }).then(() => {
       createFile({
         from: path.resolve(__dirname, '../templates/[directive].js'),
-        to: `./src/directives/${name}.js`,
-        replaceKey: name
+        to: `${CONFIG.directive.directory}/${name}.js`,
+        replace: [
+          {
+            from: 'name',
+            to: name
+          }
+        ]
       })
-    }).catch(() => {
-      console.log('Cancelled')
-    })
+    }).catch(cancelled)
   })
-
-program
-  .command('view [viewPath]')
-  .description(chalk.gray('Create a new view'))
-  .action((viewPath, options) => {
-    hasFile({
-      to: `./src/views/${viewPath}`
-    }).then(() => {
-      fs.readdirSync(path.resolve(__dirname, '../templates/[view]')).forEach(file => {
-        createFile({
-          from: path.resolve(__dirname, `../templates/[view]/${file}`),
-          to: `./src/views/${viewPath}/${file}`,
-          replaceKey: viewPath.split('/').pop().toLowerCase()
-        })
-      })
-    }).catch(() => {
-      console.log('Cancelled')
-    })
-  })
-
-program
-  .command('component [name]')
-  .description(chalk.gray('Create a new component'))
-  .action((name, options) => {
-    hasFile({
-      to: `./src/components/${name}`
-    }).then(() => {
-      fs.readdirSync(path.resolve(__dirname, '../templates/[component]')).forEach(file => {
-        createFile({
-          from: path.resolve(__dirname, `../templates/[component]/${file}`),
-          to: `./src/components/${name}/${file}`,
-          replaceKey: name
-        })
-      })
-    }).catch(() => {
-      console.log('Cancelled')
-    })
-  })
-
-// program
-//   .command('*')
-//   .action(function (name, options) {
-//     console.log(name, options)
-//   })
 
 program.on('--help', () => {
   console.log()
