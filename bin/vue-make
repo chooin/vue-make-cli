@@ -44,11 +44,11 @@ const createStyleFile = ({
 
 const cancelled = e => {
   console.log('')
-  console.log(chalk.yellow('- 已取消'))
+  console.log(chalk.yellow('- Cancelled'))
 }
 
 program
-  .version('2.0.0')
+  .version('2.0.1')
 
 program
   .command('init [type]')

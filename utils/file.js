@@ -20,13 +20,13 @@ module.exports.createFile = ({
         }
         fs.writeFile(to, data, 'utf8', err => {
           if (err) {
-            console.log(`${chalk.red(`[error]`)}`)
+            console.log(`${chalk.red(`- Failed`)}`)
           } else {
-            console.log(`${chalk.green(`[complete] `)}${path.resolve(to)}`)
+            console.log(`${chalk.green(`- Completed `)}${path.resolve(to)}`)
           }
         })
       } else {
-        console.log(`${chalk.green(`[complete] `)}${path.resolve(to)}`)
+        console.log(`${chalk.green(`- Completed `)}${path.resolve(to)}`)
       }
     })
   })
