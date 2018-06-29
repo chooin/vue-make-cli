@@ -7,7 +7,8 @@ const inquirer = require('inquirer')
 module.exports.createFile = ({
   from,
   to,
-  replace = []
+  replace = [],
+  tipPath = true
 }) => {
   fse.copy(from, to).then(() => {
     fs.readFile(to, 'utf8', (err, data) => {
@@ -20,13 +21,21 @@ module.exports.createFile = ({
         }
         fs.writeFile(to, data, 'utf8', err => {
           if (err) {
-            console.log(`${chalk.red(`- Failed`)}`)
+            console.log(`- ${chalk.red(`Failed`)}`)
           } else {
-            console.log(`${chalk.green(`- Completed `)}${path.resolve(to)}`)
+            if (tipPath) {
+              console.log(`- ${chalk.green(`Completed `)}${path.resolve(to)}`)
+            } else {
+              console.log(`- ${chalk.green(`Completed `)}`)
+            }
           }
         })
       } else {
-        console.log(`${chalk.green(`- Completed `)}${path.resolve(to)}`)
+        if (tipPath) {
+          console.log(`- ${chalk.green(`Completed `)}${path.resolve(to)}`)
+        } else {
+          console.log(`- ${chalk.green(`Completed `)}`)
+        }
       }
     })
   })
