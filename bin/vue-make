@@ -43,8 +43,8 @@ const createStyleFile = ({
 }
 
 const cancelled = e => {
-  console.log(chalk.yellow('cancelled'))
-  if (e) console.log(e)
+  console.log('')
+  console.log(chalk.yellow('- 已取消'))
 }
 
 program
@@ -191,11 +191,11 @@ program
   .action((name, options) => {
     if (name) {
       hasFile({
-        to: `./src/mixins/${name}.js`
+        to: `${CONFIG.mixin.directory}/${name}.js`
       }).then(() => {
         createFile({
           from: path.resolve(__dirname, '../templates/[mixin].js'),
-          to: `./src/mixins/${name}.js`,
+          to: `${CONFIG.mixin.directory}/${name}.js`,
           replace: [
             {
               from: 'name',
@@ -211,15 +211,39 @@ program
   .command('store-module [name]')
   .description(chalk.gray('create a new module for store'))
   .action((name, options) => {
-    hasFile({
-      to: `./src/store/modules/${name}.js`
-    }).then(() => {
+    const create = () => {
+      hasFile({
+        to: `${CONFIG.store.directory}/modules/${name}.js`
+      }).then(() => {
+        createFile({
+          from: path.resolve(__dirname, '../templates/[store-module].js'),
+          to: `${CONFIG.store.directory}/modules/${name}.js`
+        })
+      }).catch(cancelled)
+    }
+    const store = () => {
       createFile({
-        from: path.resolve(__dirname, '../templates/[store-module].js'),
-        to: `./src/store/modules/${name}.js`
+        from: path.resolve(__dirname, '../templates/store/index.js'),
+        to: `${CONFIG.store.directory}/index.js`,
+        replace: [
+          {
+            from: 'name',
+            to: name
+          }
+        ]
       })
+      createFile({
+        from: path.resolve(__dirname, '../templates/store/mutation-types.js'),
+        to: `${CONFIG.store.directory}/mutation-types.js`
+      })
+    }
+    hasFile({
+      to: `${CONFIG.store.directory}/index.js`
+    }).then(() => {
+      store()
+      create()
     }).catch(() => {
-      console.log(chalk.yellow('cancelled'))
+      create()
     })
   })
 
@@ -228,11 +252,11 @@ program
   .description(chalk.gray('create a new directive'))
   .action((name, options) => {
     hasFile({
-      to: `./src/directives/${name}.js`
+      to: `${CONFIG.directive.directory}/${name}.js`
     }).then(() => {
       createFile({
         from: path.resolve(__dirname, '../templates/[directive].js'),
-        to: `./src/directives/${name}.js`,
+        to: `${CONFIG.directive.directory}/${name}.js`,
         replace: [
           {
             from: 'name',
@@ -240,9 +264,7 @@ program
           }
         ]
       })
-    }).catch(() => {
-      console.log(chalk.yellow('cancelled'))
-    })
+    }).catch(cancelled)
   })
 
 program.on('--help', () => {
