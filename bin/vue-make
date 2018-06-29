@@ -12,13 +12,11 @@ const { STYLE_TYPE } = require('../config')
 
 // Set config
 let CONFIG
+
 try {
-  let configPath = fs.existsSync(path.resolve('./.vue-make.json'))
-    ? './.vue-make.json'
-    : path.resolve(__dirname, '../templates/.vue-make/default.json')
-  CONFIG = JSON.parse(fs.readFileSync(configPath, 'utf8'))
+  CONFIG = JSON.parse(fs.readFileSync('./.vue-make.json', 'utf8'))
 } catch (e) {
-  throw `error parsing configuration file`
+  console.log(`- Run ${chalk.yellow('vue-make init')} first`)
 }
 
 const createStyleFile = ({
@@ -43,7 +41,6 @@ const createStyleFile = ({
 }
 
 const cancelled = e => {
-  console.log('')
   console.log(chalk.yellow('- Cancelled'))
 }
 
@@ -68,6 +65,8 @@ program
   .command('page [path]')
   .description(chalk.gray('create a new page'))
   .action((pagePath, options) => {
+    if (!CONFIG) return
+
     if (pagePath) {
       if (pagePath.indexOf('/') !== 0) pagePath = `/${pagePath}`
       hasFile({
@@ -109,6 +108,8 @@ program
   .command('view [path]')
   .description(chalk.gray('create a new view'))
   .action((viewPath, options) => {
+    if (!CONFIG) return
+
     if (viewPath) {
       if (viewPath.indexOf('/') !== 0) viewPath = `/${viewPath}`
       hasFile({
@@ -150,6 +151,8 @@ program
   .command('component [name]')
   .description(chalk.gray('create a new component'))
   .action((name, options) => {
+    if (!CONFIG) return
+
     if (name) {
       hasFile({
         to: `${CONFIG.component.directory}/${name}`
@@ -189,6 +192,8 @@ program
   .command('mixin [name]')
   .description(chalk.gray('create a new mixin'))
   .action((name, options) => {
+    if (!CONFIG) return
+
     if (name) {
       hasFile({
         to: `${CONFIG.mixin.directory}/${name}.js`
@@ -211,6 +216,8 @@ program
   .command('store-module [name]')
   .description(chalk.gray('create a new module for store'))
   .action((name, options) => {
+    if (!CONFIG) return
+
     const create = () => {
       hasFile({
         to: `${CONFIG.store.directory}/modules/${name}.js`
@@ -251,6 +258,8 @@ program
   .command('directive [name]')
   .description(chalk.gray('create a new directive'))
   .action((name, options) => {
+    if (!CONFIG) return
+
     hasFile({
       to: `${CONFIG.directive.directory}/${name}.js`
     }).then(() => {
