@@ -1,5 +1,5 @@
 <template>
-  <div class="[name]">
+  <div class="[className]">
 
   </div>
 </template>
@@ -21,6 +21,6 @@ export default {
 }
 </script>
 
-<style scoped[styleType]>
+<style[styleType] scoped>
   @import "./style";
 </style>

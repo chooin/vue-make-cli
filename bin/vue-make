@@ -33,7 +33,7 @@ const createStyleFile = ({
     to: `${to}/style.${styleType}`,
     replace: [
       {
-        from: 'name',
+        from: 'className',
         to: stylePrefix
           ? `${stylePrefix}${name}`
           : name
@@ -152,26 +152,34 @@ program
   .action((name, options) => {
     if (name) {
       hasFile({
-        to: `./src/components/${name}`
+        to: `${CONFIG.component.directory}/${name}`
       }).then(() => {
         createFile({
           from: path.resolve(__dirname, `../templates/[component]/index.vue`),
-          to: `./src/components/${name}/index.vue`,
+          to: `${CONFIG.component.directory}/${name}/index.vue`,
           replace: [
             {
               from: 'name',
               to: name
             },
             {
+              from: 'className',
+              to: CONFIG.component.stylePrefix || CONFIG.component.prefix
+                ? `${CONFIG.component.stylePrefix}${CONFIG.component.prefix}${name}`
+                : name
+            },
+            {
               from: 'styleType',
-              to: ''
+              to: CONFIG.styleType
+                ? ` lang="${CONFIG.styleType}"`
+                : ''
             }
           ]
         })
         createStyleFile({
-          to: `./src/components/${name}`,
+          to: `${CONFIG.component.directory}/${name}`,
           name,
-          stylePrefix: CONFIG.component.stylePrefix
+          stylePrefix: `${CONFIG.component.stylePrefix}${CONFIG.component.prefix}`
         })
       }).catch(cancelled)
     }
