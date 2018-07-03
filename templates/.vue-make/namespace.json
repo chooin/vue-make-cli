@@ -2,19 +2,19 @@
   "styleType": "scss",
   "page": {
     "directory": "./src/pages",
-    "prefix": "",
+    "targetDirectoryPrefix": "",
     "stylePrefix": "p-",
     "layout": true
   },
   "view": {
     "directory": "./src/views",
-    "prefix": "",
+    "targetDirectoryPrefix": "",
     "stylePrefix": "v-",
     "layout": true
   },
   "component": {
     "directory": "./src/components",
-    "prefix": "c-",
+    "targetDirectoryPrefix": "c-",
     "stylePrefix": ""
   },
   "directive": {

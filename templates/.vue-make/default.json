@@ -2,19 +2,19 @@
   "styleType": "",
   "page": {
     "directory": "./src/pages",
-    "prefix": "",
+    "targetDirectoryPrefix": "",
     "stylePrefix": "",
     "layout": false
   },
   "view": {
     "directory": "./src/views",
-    "prefix": "",
+    "targetDirectoryPrefix": "",
     "stylePrefix": "",
     "layout": false
   },
   "component": {
     "directory": "./src/components",
-    "prefix": "",
+    "targetDirectoryPrefix": "",
     "stylePrefix": ""
   },
   "directive": {

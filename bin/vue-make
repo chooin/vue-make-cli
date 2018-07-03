@@ -11,10 +11,12 @@ const {
 const { STYLE_TYPE } = require('../config')
 
 let CONFIG
+let STYLE
 
 const getConfig = () => {
   try {
     CONFIG = JSON.parse(fs.readFileSync('./.vue-make.json', 'utf8'))
+    STYLE = STYLE_TYPE[CONFIG.styleType] || 'css'
   } catch (e) {
     console.log(`- Run ${chalk.yellow('vue-make init')} first`)
   }
@@ -23,21 +25,12 @@ const getConfig = () => {
 const createStyleFile = ({
   from,
   to,
-  name,
-  stylePrefix
+  replace
 }) => {
-  let styleType = STYLE_TYPE[CONFIG.styleType] || 'css'
   createFile({
-    from: path.resolve(__dirname, `../templates/style/style.${styleType}`),
-    to: `${to}/style.${styleType}`,
-    replace: [
-      {
-        from: 'className',
-        to: stylePrefix
-          ? `${stylePrefix}${name}`
-          : name
-      }
-    ]
+    from: path.resolve(__dirname, `../templates/style/style.${STYLE}`),
+    to: `${to}/style.${STYLE}`,
+    replace
   })
 }
 
@@ -46,7 +39,7 @@ const cancelled = e => {
 }
 
 program
-  .version('2.1.1')
+  .version('2.2.0')
 
 program
   .command('init [type]')
@@ -68,40 +61,36 @@ program
   .description(chalk.gray('create a new page'))
   .action((pagePath, options) => {
     getConfig()
-    if (!CONFIG) return
+    if (CONFIG) {
+      CONFIG = CONFIG.page
+    } else {
+      return
+    }
 
     if (pagePath) {
       if (pagePath.indexOf('/') !== 0) pagePath = `/${pagePath}`
+      let originName = pagePath.split('/').pop().toLowerCase()
+      let name = `${CONFIG.targetDirectoryPrefix}${originName}`
+      let to = `${CONFIG.directory}${pagePath.replace(originName, name)}`
+      let className = CONFIG.stylePrefix || CONFIG.targetDirectoryPrefix ? `${CONFIG.stylePrefix}${name}` : name
+      let styleType = CONFIG.styleType ? ` lang="${CONFIG.styleType}"` : ''
       hasFile({
-        to: `${CONFIG.page.directory}${pagePath}`
+        to
       }).then(() => {
-        let name = pagePath.split('/').pop().toLowerCase()
         createFile({
           from: path.resolve(__dirname, `../templates/[page]/index.vue`),
-          to: `${CONFIG.page.directory}${pagePath}/index.vue`,
+          to: `${to}/index.vue`,
           replace: [
-            {
-              from: 'name',
-              to: name
-            },
-            {
-              from: 'className',
-              to: CONFIG.page.stylePrefix
-                ? `${CONFIG.page.stylePrefix}${name}`
-                : name
-            },
-            {
-              from: 'styleType',
-              to: CONFIG.styleType
-                ? ` lang="${CONFIG.styleType}"`
-                : ''
-            }
+            { from: 'name', to: name },
+            { from: 'className', to: className },
+            { from: 'styleType', to: styleType }
           ]
         })
         createStyleFile({
-          to: `${CONFIG.page.directory}${pagePath}`,
-          name,
-          stylePrefix: CONFIG.page.stylePrefix
+          to,
+          replace: [
+            { from: 'className', to: className }
+          ]
         })
       }).catch(cancelled)
     }
@@ -112,40 +101,36 @@ program
   .description(chalk.gray('create a new view'))
   .action((viewPath, options) => {
     getConfig()
-    if (!CONFIG) return
+    if (CONFIG) {
+      CONFIG = CONFIG.view
+    } else {
+      return
+    }
 
     if (viewPath) {
       if (viewPath.indexOf('/') !== 0) viewPath = `/${viewPath}`
+      let originName = viewPath.split('/').pop().toLowerCase()
+      let name = `${CONFIG.targetDirectoryPrefix}${originName}`
+      let to = `${CONFIG.directory}${viewPath.replace(originName, name)}`
+      let className = CONFIG.stylePrefix || CONFIG.targetDirectoryPrefix ? `${CONFIG.stylePrefix}${name}` : name
+      let styleType = CONFIG.styleType ? ` lang="${CONFIG.styleType}"` : ''
       hasFile({
-        to: `${CONFIG.view.directory}${viewPath}`
+        to
       }).then(() => {
-        let name = viewPath.split('/').pop().toLowerCase()
         createFile({
           from: path.resolve(__dirname, `../templates/[view]/index.vue`),
-          to: `${CONFIG.view.directory}${viewPath}/index.vue`,
+          to: `${to}/index.vue`,
           replace: [
-            {
-              from: 'name',
-              to: name
-            },
-            {
-              from: 'className',
-              to: CONFIG.view.stylePrefix
-                ? `${CONFIG.view.stylePrefix}${name}`
-                : name
-            },
-            {
-              from: 'styleType',
-              to: CONFIG.styleType
-                ? ` lang="${CONFIG.styleType}"`
-                : ''
-            }
+            { from: 'name', to: name },
+            { from: 'className', to: className },
+            { from: 'styleType', to: styleType }
           ]
         })
         createStyleFile({
-          to: `${CONFIG.view.directory}${viewPath}`,
-          name,
-          stylePrefix: CONFIG.view.stylePrefix
+          to,
+          replace: [
+            { from: 'className', to: className }
+          ]
         })
       }).catch(cancelled)
     }
@@ -156,38 +141,34 @@ program
   .description(chalk.gray('create a new component'))
   .action((name, options) => {
     getConfig()
-    if (!CONFIG) return
+    if (CONFIG) {
+      CONFIG = CONFIG.component
+    } else {
+      return
+    }
 
     if (name) {
       hasFile({
-        to: `${CONFIG.component.directory}/${name}`
+        to: `${CONFIG.directory}/${name}`
       }).then(() => {
+        name = `${CONFIG.targetDirectoryPrefix}${name}`
+        let to = `${CONFIG.directory}/${name}`
+        let className = CONFIG.stylePrefix || CONFIG.targetDirectoryPrefix ? `${CONFIG.stylePrefix}${name}` : name
+        let styleType = CONFIG.styleType ? ` lang="${CONFIG.styleType}"` : ''
         createFile({
           from: path.resolve(__dirname, `../templates/[component]/index.vue`),
-          to: `${CONFIG.component.directory}/${name}/index.vue`,
+          to: `${to}/index.vue`,
           replace: [
-            {
-              from: 'name',
-              to: name
-            },
-            {
-              from: 'className',
-              to: CONFIG.component.stylePrefix || CONFIG.component.prefix
-                ? `${CONFIG.component.stylePrefix}${CONFIG.component.prefix}${name}`
-                : name
-            },
-            {
-              from: 'styleType',
-              to: CONFIG.styleType
-                ? ` lang="${CONFIG.styleType}"`
-                : ''
-            }
+            { from: 'name', to: name },
+            { from: 'className', to: className },
+            { from: 'styleType', to: styleType }
           ]
         })
         createStyleFile({
-          to: `${CONFIG.component.directory}/${name}`,
-          name,
-          stylePrefix: `${CONFIG.component.stylePrefix}${CONFIG.component.prefix}`
+          to,
+          replace: [
+            { from: 'className', to: className }
+          ]
         })
       }).catch(cancelled)
     }
@@ -208,10 +189,7 @@ program
           from: path.resolve(__dirname, '../templates/[mixin].js'),
           to: `${CONFIG.mixin.directory}/${name}.js`,
           replace: [
-            {
-              from: 'name',
-              to: name
-            }
+            { from: 'name', to: name }
           ]
         })
       }).catch(cancelled)
@@ -240,10 +218,7 @@ program
         from: path.resolve(__dirname, '../templates/store/index.js'),
         to: `${CONFIG.store.directory}/index.js`,
         replace: [
-          {
-            from: 'name',
-            to: name
-          }
+          { from: 'name', to: name }
         ]
       })
       createFile({
@@ -275,10 +250,7 @@ program
         from: path.resolve(__dirname, '../templates/[directive].js'),
         to: `${CONFIG.directive.directory}/${name}.js`,
         replace: [
-          {
-            from: 'name',
-            to: name
-          }
+          { from: 'name', to: name }
         ]
       })
     }).catch(cancelled)
