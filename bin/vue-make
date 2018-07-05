@@ -16,7 +16,7 @@ let STYLE
 const getConfig = () => {
   try {
     CONFIG = JSON.parse(fs.readFileSync('./.vue-make.json', 'utf8'))
-    STYLE = STYLE_TYPE[CONFIG.styleType] || 'css'
+    STYLE = STYLE_TYPE[CONFIG.styleType]
   } catch (e) {
     console.log(`- Run ${chalk.yellow('vue-make init')} first`)
   }
@@ -39,7 +39,7 @@ const cancelled = e => {
 }
 
 program
-  .version('2.2.1')
+  .version('2.2.2')
 
 program
   .command('init [type]')
@@ -73,7 +73,8 @@ program
       let name = `${CONFIG.targetDirectoryPrefix}${originName}`
       let to = `${CONFIG.directory}${pagePath.replace(originName, name)}`
       let className = CONFIG.stylePrefix || CONFIG.targetDirectoryPrefix ? `${CONFIG.stylePrefix}${name}` : name
-      let styleType = CONFIG.styleType ? ` lang="${CONFIG.styleType}"` : ''
+      let styleType = STYLE
+      let styleTypeLang = STYLE ? ` lang="${STYLE}"` : ''
       hasFile({
         to
       }).then(() => {
@@ -83,7 +84,8 @@ program
           replace: [
             { from: 'name', to: name },
             { from: 'className', to: className },
-            { from: 'styleType', to: styleType }
+            { from: 'styleType', to: styleType },
+            { from: 'styleTypeLang', to: styleTypeLang }
           ]
         })
         createStyleFile({
@@ -113,7 +115,8 @@ program
       let name = `${CONFIG.targetDirectoryPrefix}${originName}`
       let to = `${CONFIG.directory}${viewPath.replace(originName, name)}`
       let className = CONFIG.stylePrefix || CONFIG.targetDirectoryPrefix ? `${CONFIG.stylePrefix}${name}` : name
-      let styleType = CONFIG.styleType ? ` lang="${CONFIG.styleType}"` : ''
+      let styleType = STYLE
+      let styleTypeLang = STYLE ? ` lang="${STYLE}"` : ''
       hasFile({
         to
       }).then(() => {
@@ -123,7 +126,8 @@ program
           replace: [
             { from: 'name', to: name },
             { from: 'className', to: className },
-            { from: 'styleType', to: styleType }
+            { from: 'styleType', to: styleType },
+            { from: 'styleTypeLang', to: styleTypeLang }
           ]
         })
         createStyleFile({
@@ -154,14 +158,16 @@ program
         name = `${CONFIG.targetDirectoryPrefix}${name}`
         let to = `${CONFIG.directory}/${name}`
         let className = CONFIG.stylePrefix || CONFIG.targetDirectoryPrefix ? `${CONFIG.stylePrefix}${name}` : name
-        let styleType = CONFIG.styleType ? ` lang="${CONFIG.styleType}"` : ''
+        let styleType = STYLE
+        let styleTypeLang = STYLE ? ` lang="${STYLE}"` : ''
         createFile({
           from: path.resolve(__dirname, `../templates/[component]/index.vue`),
           to: `${to}/index.vue`,
           replace: [
             { from: 'name', to: name },
             { from: 'className', to: className },
-            { from: 'styleType', to: styleType }
+            { from: 'styleType', to: styleType },
+            { from: 'styleTypeLang', to: styleTypeLang }
           ]
         })
         createStyleFile({

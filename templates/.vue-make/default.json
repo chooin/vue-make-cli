@@ -1,5 +1,5 @@
 {
-  "styleType": "",
+  "styleType": "css",
   "page": {
     "directory": "./src/pages",
     "targetDirectoryPrefix": "",

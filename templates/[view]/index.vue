@@ -18,6 +18,6 @@ export default {
 }
 </script>
 
-<style[styleType] scoped>
-  @import "./style";
+<style[styleTypeLang] scoped>
+  @import "./style.[styleType]";
 </style>
