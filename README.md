@@ -1,8 +1,8 @@
 # vue-make-cli
 
-[![Build Status](https://travis-ci.org/Hema-FE/vue-make-cli.svg?branch=master)](https://travis-ci.org/Hema-FE/vue-make-cli)
+[![Build Status](https://travis-ci.org/Chooin/vue-make-cli.svg?branch=master)](https://travis-ci.org/Chooin/vue-make-cli)
 
-<img src="https://github.com/Hema-FE/vue-make-cli/blob/master/awesome.gif" width="480" height="auto" />
+<img src="https://github.com/Chooin/vue-make-cli/blob/master/awesome.gif" width="480" height="auto" />
 
 ### Installation
 
