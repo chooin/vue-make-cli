@@ -6,7 +6,7 @@
 
 ### Installation
 
-``` sh
+```sh
 yarn global add vue-make-cli
 # or
 npm install -g vue-make-cli
@@ -14,16 +14,54 @@ npm install -g vue-make-cli
 
 ### Usage
 
-``` sh
+```sh
 vue-make --help
 ```
 
 ##### Create a new page/view
 
-``` sh
+```sh
 # your page will be create in src/pages
 vue-make page /product/index
 
 # your view will be create in src/views
 vue-make view /product/index
 ```
+
+### Config
+
+vue-make.json
+
+```json
+{
+  "styleType": "css",
+  "page": {
+    "directory": "./src/pages",
+    "targetDirectoryPrefix": "",
+    "stylePrefix": "",
+    "layout": false
+  },
+  "view": {
+    "directory": "./src/views",
+    "targetDirectoryPrefix": "",
+    "stylePrefix": "",
+    "layout": false
+  },
+  "component": {
+    "directory": "./src/components",
+    "targetDirectoryPrefix": "",
+    "stylePrefix": ""
+  },
+  "directive": {
+    "directory": "./src/directives"
+  },
+  "mixin": {
+    "directory": "./src/mixins"
+  },
+  "store": {
+    "directory": "./src/store"
+  }
+}
+```
+
+
