@@ -39,7 +39,7 @@ const cancelled = e => {
 }
 
 program
-  .version('2.2.3')
+  .version('2.2.4')
 
 program
   .command('init [type]')
@@ -51,7 +51,7 @@ program
       createFile({
         from: path.resolve(__dirname, `../templates/.vue-make/${type}.json`),
         to: `./.vue-make.json`,
-        tipPath: false
+        tip: false
       })
     }).catch(cancelled)
   })
@@ -245,7 +245,8 @@ program
         })
       }
       hasFile({
-        to: `${CONFIG.directory}/index.js`
+        to: `${CONFIG.directory}/index.js`,
+        tip: false
       }).then(() => {
         store()
         create()

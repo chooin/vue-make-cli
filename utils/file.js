@@ -8,7 +8,7 @@ module.exports.createFile = ({
   from,
   to,
   replace = [],
-  tipPath = true
+  tip = true
 }) => {
   fse.copy(from, to).then(() => {
     fs.readFile(to, 'utf8', (err, data) => {
@@ -23,7 +23,7 @@ module.exports.createFile = ({
           if (err) {
             console.log(`- ${chalk.red(`Failed`)}`)
           } else {
-            if (tipPath) {
+            if (tip) {
               console.log(`- ${chalk.green(`Completed `)}${path.resolve(to)}`)
             } else {
               console.log(`- ${chalk.green(`Completed `)}`)
@@ -31,7 +31,7 @@ module.exports.createFile = ({
           }
         })
       } else {
-        if (tipPath) {
+        if (tip) {
           console.log(`- ${chalk.green(`Completed `)}${path.resolve(to)}`)
         } else {
           console.log(`- ${chalk.green(`Completed `)}`)
@@ -42,24 +42,29 @@ module.exports.createFile = ({
 }
 
 module.exports.hasFile = ({
-  to
+  to,
+  tip = true
 }) => {
   return new Promise((resolve, reject) => {
     if (fs.existsSync(path.resolve(to))) {
-      inquirer.prompt([{
-        type: 'confirm',
-        message: 'Target file exists. Continue?',
-        name: 'ok',
-        default: false
-      }]).then(answers => {
-        if (answers.ok) {
-          resolve()
-        } else {
-          reject()
-        }
-      }).catch(_ => {
-        console.log(_)
-      })
+      if (tip) {
+        inquirer.prompt([{
+          type: 'confirm',
+          message: 'Target file exists. Continue?',
+          name: 'ok',
+          default: false
+        }]).then(answers => {
+          if (answers.ok) {
+            resolve()
+          } else {
+            reject()
+          }
+        }).catch(_ => {
+          console.log(_)
+        })
+      } else {
+        reject()
+      }
     } else {
       resolve()
     }
