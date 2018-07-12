@@ -46,7 +46,8 @@ const createLayout = fullPath => {
         : pathSplit[i]
       let to = `${CONFIG.directory}${currentPath}/layout`
       hasFile({
-        to
+        to,
+        tip: false
       }).then(() => {
         createFile({
           from: path.resolve(__dirname, `../templates/[layout]/index.vue`),
@@ -61,7 +62,7 @@ const createLayout = fullPath => {
 }
 
 program
-  .version('2.2.6')
+  .version('2.2.7')
 
 program
   .command('init [type]')
