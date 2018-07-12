@@ -35,6 +35,31 @@ const createStyleFile = ({
   })
 }
 
+const createLayout = fullPath => {
+  let pathSplit = fullPath.split('/')
+  let currentPath = ''
+  for (let i in pathSplit) {
+    if (i > 0 && i < pathSplit.length - 1) {
+      currentPath += `/${pathSplit[i]}`
+      let className = CONFIG.stylePrefix || CONFIG.targetDirectoryPrefix
+        ? `${CONFIG.stylePrefix}${pathSplit[i]}`
+        : pathSplit[i]
+      let to = `${CONFIG.directory}${currentPath}/layout`
+      hasFile({
+        to
+      }).then(() => {
+        createFile({
+          from: path.resolve(__dirname, `../templates/[layout]/index.vue`),
+          to: `${to}/index.vue`,
+          replace: [
+            { from: 'className', to: className }
+          ]
+        })
+      }).catch(console.log)
+    }
+  }
+}
+
 program
   .version('2.2.4')
 
@@ -91,6 +116,9 @@ program
             { from: 'className', to: className }
           ]
         })
+        if (CONFIG.layout) {
+          createLayout(pagePath)
+        }
       }).catch(log.cancelled)
     }
   })
@@ -133,6 +161,9 @@ program
             { from: 'className', to: className }
           ]
         })
+        if (CONFIG.layout) {
+          createLayout(viewPath)
+        }
       }).catch(log.cancelled)
     }
   })
