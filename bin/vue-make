@@ -61,7 +61,7 @@ const createLayout = fullPath => {
 }
 
 program
-  .version('2.2.5')
+  .version('2.2.6')
 
 program
   .command('init [type]')

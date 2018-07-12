@@ -51,7 +51,7 @@ module.exports.hasFile = ({
       if (tip) {
         inquirer.prompt([{
           type: 'confirm',
-          message: '文件存在. 是否继续?',
+          message: 'Target file exists. Continue?',
           name: 'ok',
           default: false
         }]).then(answers => {
