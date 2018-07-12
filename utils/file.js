@@ -1,8 +1,9 @@
 const fs = require('fs')
 const path = require('path')
 const fse = require('fs-extra')
-const chalk = require('chalk')
 const inquirer = require('inquirer')
+
+const log = require('./log')
 
 module.exports.createFile = ({
   from,
@@ -21,20 +22,20 @@ module.exports.createFile = ({
         }
         fs.writeFile(to, data, 'utf8', err => {
           if (err) {
-            console.log(`- ${chalk.red(`Failed`)}`)
+            log.failed()
           } else {
             if (tip) {
-              console.log(`- ${chalk.green(`Completed `)}${path.resolve(to)}`)
+              log.completed(path.resolve(to))
             } else {
-              console.log(`- ${chalk.green(`Completed `)}`)
+              log.completed()
             }
           }
         })
       } else {
         if (tip) {
-          console.log(`- ${chalk.green(`Completed `)}${path.resolve(to)}`)
+          log.completed(path.resolve(to))
         } else {
-          console.log(`- ${chalk.green(`Completed `)}`)
+          log.completed()
         }
       }
     })
@@ -50,7 +51,7 @@ module.exports.hasFile = ({
       if (tip) {
         inquirer.prompt([{
           type: 'confirm',
-          message: 'Target file exists. Continue?',
+          message: '文件存在. 是否继续?',
           name: 'ok',
           default: false
         }]).then(answers => {
