@@ -11,3 +11,4 @@ selenium-debug.log
 src/
 
 .vue-make.json
+/.env*

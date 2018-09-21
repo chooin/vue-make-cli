@@ -1,4 +1,6 @@
 rm -rf ./src/*
+rm -f ./.env*
+rm -f ./.vue-make.json
 
 ./bin/vue-make page page/index
 ./bin/vue-make view view/index

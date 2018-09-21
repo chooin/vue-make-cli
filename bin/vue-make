@@ -62,7 +62,7 @@ const createLayout = fullPath => {
 }
 
 program
-  .version('2.2.7')
+  .version('2.2.8')
 
 program
   .command('init [type]')
@@ -306,6 +306,37 @@ program
           replace: [
             { from: 'name', to: name }
           ]
+        })
+      }).catch(log.cancelled)
+    }
+  })
+
+program
+  .command('env')
+  .description(chalk.gray('create environment files'))
+  .action((name) => {
+    if (name) {
+      getConfig()
+      if (CONFIG) {
+        CONFIG = CONFIG.directive
+      } else {
+        return
+      }
+
+      const ENVS = ['.env.test', '.env.development', '.env.production']
+
+      hasFile({
+        to: `.env`
+      }).then(() => {
+        for (let env of ENVS) {
+          createFile({
+            from: path.resolve(__dirname, '../templates/env/.env.[build]'),
+            to: env
+          })
+        }
+        createFile({
+          from: path.resolve(__dirname, '../templates/env/.env'),
+          to: '.env'
         })
       }).catch(log.cancelled)
     }
