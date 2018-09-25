@@ -62,7 +62,7 @@ const createLayout = fullPath => {
 }
 
 program
-  .version('2.2.8')
+  .version('2.3.0')
 
 program
   .command('init [type]')
@@ -326,18 +326,19 @@ program
       const ENVS = ['.env.test', '.env.development', '.env.production']
 
       hasFile({
-        to: `.env`
+        to: '.env.development'
       }).then(() => {
         for (let env of ENVS) {
           createFile({
-            from: path.resolve(__dirname, '../templates/env/.env.[build]'),
-            to: env
+            from: path.resolve(__dirname, `../templates/env/${env}`),
+            to: env,
+            replace: [
+              {
+                from: 'env', to: env === '.env.development' ? '' : 'NODE_ENV=production'
+              }
+            ]
           })
         }
-        createFile({
-          from: path.resolve(__dirname, '../templates/env/.env'),
-          to: '.env'
-        })
       }).catch(log.cancelled)
     }
   })
